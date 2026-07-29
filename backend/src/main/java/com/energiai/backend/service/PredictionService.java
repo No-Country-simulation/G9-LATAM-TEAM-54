@@ -25,13 +25,14 @@ public class PredictionService {
             env = OrtEnvironment.getEnvironment();
 
             // Carga el modelo ONNX
-            InputStream modelStream = getClass().getClassLoader().getResourceAsStream("models/modelo.onnx");
-            if (modelStream == null) {
-                throw new RuntimeException("No se encontró el archivo del modelo ONNX en resources/models/modelo.onnx");
-            }
+            try (InputStream modelStream = getClass().getClassLoader().getResourceAsStream("models/modelo.onnx")) {
+                if (modelStream == null) {
+                    throw new RuntimeException("No se encontró el archivo del modelo ONNX en resources/models/modelo.onnx");
+                }
 
-            byte[] modelBytes = modelStream.readAllBytes();
-            session = env.createSession(modelBytes);
+                byte[] modelBytes = modelStream.readAllBytes();
+                session = env.createSession(modelBytes);
+            }
 
         } catch (Exception e) {
             throw new RuntimeException("Error al inicializar el modelo ONNX: " + e.getMessage(), e);
