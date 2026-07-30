@@ -30,10 +30,10 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
 ### Card #07: CONTROLADOR REST (ENDPOINTS) (En curso) 🛠
 * **Objetivo:** Exponer los endpoints oficiales del sistema manteniendo un controlador delgado (thin controller).
 * **Avances técnicos:**
-  (Datos por agregar).
+  * (Datos por agregar).
 
 ### Card #08: MANEJO GLOBAL DE ERRORES (Por iniciar) ⌛
 * **Objetivo:** Centralizar la captura de excepciones para garantizar respuestas JSON limpias y con los códigos HTTP correctos.
-* * **Avances técnicos:**
-  (Datos por agregar).
+* **Avances técnicos:**
+  * (Datos por agregar).
 ---
