@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnergiAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="scanline" aria-hidden="true"></div>
+
+<div class="container">
+
+    <header class="page-head">
+        <span class="eyebrow">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            Panel de monitoreo
+        </span>
+        <h1>Energi<span class="accent">AI</span></h1>
+        <p class="subtitle">Inteligencia para el consumo energético</p>
+    </header>
+
+    <div class="card">
+
+        <div class="card-head">
+            <h2 class="card-title">Datos del inmueble</h2>
+            <span class="card-tag">Entrada</span>
+        </div>
+
+        <div class="field-grid">
+
+            <div class="field">
+                <label for="consumo">Consumo mensual <span class="unit">kWh</span></label>
+                <input type="number" id="consumo" placeholder="420">
+            </div>
+
+            <div class="field">
+                <label for="equipos">Cantidad de equipos <span class="unit">unid.</span></label>
+                <input type="number" id="equipos" placeholder="10">
+            </div>
+
+            <div class="field">
+                <label for="tipo">Tipo de inmueble</label>
+                <select id="tipo">
+                    <option>Casa</option>
+                    <option>Departamento</option>
+                    <option>Oficina</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="horas">Horas de alto consumo <span class="unit">h/día</span></label>
+                <input type="number" id="horas" placeholder="8">
+            </div>
+
+            <div class="field field-wide">
+                <label for="pico">Uso en horario pico</label>
+                <select id="pico">
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button onclick="analizar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" fill="currentColor"/>
+            </svg>
+            Analizar consumo
+        </button>
+
+    </div>
+
+    <div class="resultado" id="resultado">
+
+        <div class="card-head">
+            <h2 class="card-title">Resultado</h2>
+            <span class="card-tag">Salida</span>
+        </div>
+
+        <div class="resultado-body">
+
+            <div class="gauge" id="gauge" style="--pct:0;">
+                <div class="gauge-ring"></div>
+                <div class="gauge-value">
+                    <span id="probabilidad">-</span>
+                    <small>probabilidad</small>
+                </div>
+            </div>
+
+            <div class="resultado-stats">
+                <div class="stat">
+                    <span class="stat-label">Categoría</span>
+                    <span class="stat-value badge" id="categoria">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Costo estimado</span>
+                    <span class="stat-value mono">R$ <span id="costo">-</span></span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="recomendaciones-block">
+            <h3>Recomendaciones</h3>
+            <ul id="recomendaciones"></ul>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+<script>
+
+(function () {
+    const gauge = document.getElementById('gauge');
+    const probEl = document.getElementById('probabilidad');
+    const catEl = document.getElementById('categoria');
+
+    function syncGauge() {
+        const n = parseFloat((probEl.textContent || '').replace(',', '.').replace('%', ''));
+        const pct = isNaN(n) ? 0 : Math.max(0, Math.min(100, n));
+        gauge.style.setProperty('--pct', pct);
+    }
+
+    function syncCategoria() {
+        const t = (catEl.textContent || '').toLowerCase();
+        let level = 'default';
+        if (/alto|alta|riesgo|crítico|critico/.test(t)) level = 'high';
+        else if (/medio|media|moderado|moderada/.test(t)) level = 'mid';
+        else if (/bajo|baja|eficiente|óptimo|optimo/.test(t)) level = 'low';
+        catEl.setAttribute('data-level', level);
+    }
+
+    new MutationObserver(syncGauge).observe(probEl, { childList: true, characterData: true, subtree: true });
+    new MutationObserver(syncCategoria).observe(catEl, { childList: true, characterData: true, subtree: true });
+})();
+</script>
+</body>
+</html>
