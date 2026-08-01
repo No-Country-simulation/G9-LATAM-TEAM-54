@@ -19,11 +19,11 @@ MkDocs Material incluye cajas estilizadas para resaltar información importante:
 ??? note "Nota desplegable (Colapsable)"
     Este contenido está oculto por defecto y se despliega al hacer clic. Ideal para notas largas o ejemplos de código opcionales.
 
-!!! warning | Advertencia importante
+!!! warning "Advertencia importante"
 Los endpoints de la API pueden cambiar según la última actualización del controlador del backend.
 !!!
 
-!!! success | Éxito
+!!! success "Éxito"
 La predicción de consumo energético se completó sin errores en el servidor.
 !!!
 
