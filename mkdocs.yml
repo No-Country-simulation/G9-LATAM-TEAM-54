@@ -14,3 +14,6 @@ theme:
 
 nav:
   - Inicio: index.md
+  - API: API.md
+  - Arquitectura: ARCHITECTURE.md
+  - Progreso: PROGRESS.md
