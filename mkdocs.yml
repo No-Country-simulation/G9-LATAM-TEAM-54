@@ -1,0 +1,16 @@
+site_name: EnergiAI - Documentación
+site_description: Guía técnica y documentación del proyecto EnergiAI
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: indigo
+    accent: deep orange
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+
+nav:
+  - Inicio: index.md
