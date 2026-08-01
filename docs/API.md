@@ -8,6 +8,7 @@
 * **Descripción:** Orquesta la predicción mediante IA, calcula el costo financiero y genera recomendaciones basadas en los datos suministrados.
 
 #### Respuesta de Ejemplo (`JSON`)
+
 ```json
 {
   "consumoActual": 45.5,
