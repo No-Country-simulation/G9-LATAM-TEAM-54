@@ -9,3 +9,4 @@ Este archivo sirve para verificar cómo se renderizan los estilos, bloques de c�
   "test": true,
   "mensaje": "Probando bloques de código en MkDocs"
 }
+```
