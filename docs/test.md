@@ -20,12 +20,10 @@ MkDocs Material incluye cajas estilizadas para resaltar información importante:
     Este contenido está oculto por defecto y se despliega al hacer clic. Ideal para notas largas o ejemplos de código opcionales.
 
 !!! warning "Advertencia importante"
-Los endpoints de la API pueden cambiar según la última actualización del controlador del backend.
-!!!
+    Los endpoints de la API pueden cambiar según la última actualización del controlador del backend.
 
 !!! success "Éxito"
-La predicción de consumo energético se completó sin errores en el servidor.
-!!!
+    La predicción de consumo energético se completó sin errores en el servidor.
 
 ## 3. Tablas Estilizadas
 
