@@ -17,8 +17,8 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
-    - content.code.annotate     # Permite agregar anotaciones flotantes interactivas en los bloques de código
-    - header.autohide           # Oculta automáticamente la barra superior al hacer scroll hacia abajo para maximizar el espacio de lectura
+    - content.code.annotate
+    - header.autohide   
 
 markdown_extensions:
   - pymdownx.superfences
