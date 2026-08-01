@@ -3,14 +3,22 @@ site_description: Guía técnica y documentación del proyecto EnergiAI
 theme:
   name: material
   palette:
-    scheme: slate
-    primary: indigo
-    accent: deep orange
+    - scheme: slate
+      primary: indigo
+      accent: deep orange
   features:
     - navigation.instant
     - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
     - search.suggest
     - search.highlight
+    - content.code.copy
+    - content.code.annotate     # Permite agregar anotaciones flotantes interactivas en los bloques de código
+    - header.autohide           # Oculta automáticamente la barra superior al hacer scroll hacia abajo para maximizar el espacio de lectura
 
 markdown_extensions:
   - pymdownx.superfences
