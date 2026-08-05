@@ -1,5 +1,6 @@
 package com.energiai.backend.service;
 
+import com.energiai.backend.dto.request.AnalisisRequest;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,21 @@ public class AnalisisService {
         this.predictionService = predictionService;
         this.costService = costService;
         this.recommendationsService = recommendationsService;
+    }
+
+    // Método adaptador que procesa el DTO y llama a la lógica principal
+    public Map<String, Object> ejecutarAnalisis(AnalisisRequest request) {
+        double consumoActual = request.getConsumo_kwh();
+
+        // Mapea los campos del DTO
+        float[] inputData = new float[] {
+                request.getConsumo_kwh() != null ? request.getConsumo_kwh().floatValue() : 0.0f,
+                Boolean.TRUE.equals(request.getUso_horario_pico()) ? 1.0f : 0.0f,
+                request.getCantidad_equipos() != null ? request.getCantidad_equipos().floatValue() : 0.0f,
+                request.getHoras_alto_consumo() != null ? request.getHoras_alto_consumo().floatValue() : 0.0f
+        };
+
+        return ejecutarAnalisis(inputData, consumoActual);
     }
 
     public Map<String, Object> ejecutarAnalisis(float[] inputData, double consumoActual) {
