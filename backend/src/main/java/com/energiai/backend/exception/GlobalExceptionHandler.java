@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    // 2. Errores del modelo ONNX
+    // Errores del modelo ONNX
     // Excepción para pruebas
     @ExceptionHandler(ModelInferenceException.class)
     public ResponseEntity<Map<String, Object>> handleModelInferenceException(ModelInferenceException ex) {
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
-    // 3. Excepciones no controladas: Evita fugas de trazas y retorna un genérico ordenado -> 500 Internal Server Error
+    // Excepciones no controladas -> 500 Internal Server Error
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleAllUncaughtException(Exception ex) {
         Map<String, Object> response = new HashMap<>();
