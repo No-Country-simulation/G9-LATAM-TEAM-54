@@ -25,9 +25,10 @@ public class PredictionService {
             env = OrtEnvironment.getEnvironment();
 
             // Carga el modelo ONNX
-            try (InputStream modelStream = getClass().getClassLoader().getResourceAsStream("models/modelo.onnx")) {
+            try (InputStream modelStream = getClass().getClassLoader().getResourceAsStream("model/modelo.onnx")) {
                 if (modelStream == null) {
-                    throw new RuntimeException("No se encontró el archivo del modelo ONNX en resources/models/modelo.onnx");
+                    System.out.println("ADVERTENCIA: No se encontró el archivo del modelo ONNX en resources/model/modelo.onnx. El servicio estará deshabilitado temporalmente.");
+                    return; //  arranque de prueba
                 }
 
                 byte[] modelBytes = modelStream.readAllBytes();
@@ -40,6 +41,9 @@ public class PredictionService {
     }
 
     public float predecir(float[] inputData) {
+        if (session == null) {
+            throw new IllegalStateException("El modelo ONNX no está cargado todavía. Esperando el archivo modelo.onnx.");
+        }
         try {
             // Tensor de entrada
             long[] shape = new long[]{1, inputData.length};
