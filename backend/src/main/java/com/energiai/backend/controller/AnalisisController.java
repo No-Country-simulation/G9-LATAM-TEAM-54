@@ -1,6 +1,7 @@
 package com.energiai.backend.controller;
 
 import com.energiai.backend.dto.request.AnalisisRequest;
+import com.energiai.backend.repository.AnalisisRepository;
 import com.energiai.backend.service.AnalisisService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class AnalisisController {
 
     private final AnalisisService analisisService;
+    private final AnalisisRepository analisisRepository;
 
-    public AnalisisController(AnalisisService analisisService) {
+    public AnalisisController(AnalisisService analisisService, AnalisisRepository analisisRepository) {
         this.analisisService = analisisService;
+        this.analisisRepository = analisisRepository;
     }
 
     @PostMapping("/analisis-energetico")
@@ -24,17 +27,19 @@ public class AnalisisController {
 
     @GetMapping("/analisis/{id}")
     public ResponseEntity<Object> obtenerAnalisisPorId(@PathVariable("id") Long id) {
-        // Simulacion de resultados
-        System.out.println("AVISO: Usando respuesta GET simulada para el ID: " + id);
-
-        java.util.Map<String, Object> mockResponse = new java.util.HashMap<>();
-        mockResponse.put("id", id);
-        mockResponse.put("consumoActual", 150.0);
-        mockResponse.put("costoEstimado", 112.5);
-        mockResponse.put("prediccion", 42.0);
-        mockResponse.put("recomendaciones", java.util.List.of("El consumo actual es elevado. Considere apagar equipos en horas pico."));
-
-        return ResponseEntity.ok(mockResponse);
+        return analisisRepository.findById(id)
+                .map(entidad -> {
+                    java.util.Map<String, Object> response = new java.util.HashMap<>();
+                    response.put("id", entidad.getId());
+                    response.put("categoria", entidad.getCategoria());
+                    response.put("probabilidad", entidad.getProbabilidad());
+                    response.put("consumoActual", entidad.getConsumoActual());
+                    response.put("costoEstimado", entidad.getCostoEstimado());
+                    response.put("prediccion", entidad.getPrediccion());
+                    response.put("recomendaciones", java.util.Arrays.asList(entidad.getRecomendaciones().split("\n")));
+                    response.put("fechaCreacion", entidad.getFechaCreacion());
+                    return ResponseEntity.ok((Object) response);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }
-

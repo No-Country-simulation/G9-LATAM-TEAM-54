@@ -3,10 +3,18 @@ spring:
     name: backend
   main:
     web-application-type: servlet
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+  datasource:
+    url: jdbc:postgresql://postgres:5432/energiai_db
+    username: postgres
+    password: tu_contrasena
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  docker:
+    compose:
+      enabled: false
 
 server:
-  port: 8081
+  port: 8082
