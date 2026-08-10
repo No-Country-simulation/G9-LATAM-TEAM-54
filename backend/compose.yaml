@@ -10,6 +10,8 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   app-energi:
     build:
@@ -27,6 +29,23 @@ services:
     depends_on:
       - postgres
     restart: unless-stopped
+    networks:
+      - app-network
+
+  adminer:
+    image: adminer
+    container_name: energiai-adminer
+    ports:
+      - "8083:8080"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - app-network
 
 volumes:
   pgdata:
+
+networks:
+  app-network:
+    driver: bridge
