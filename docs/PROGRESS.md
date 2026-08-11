@@ -37,14 +37,18 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
   * **REPORTE DE AVANCES 09-08-2026**
   
 **1. RESUMEN DE CAMBIOS REALIZADOS**
---------------------------------------------------
+
+---
+
 * **Actualización de Rama y Base de Datos:**
 
   - Se actualizó la rama 8 y se integró Adminer como interfaz gráfica
     ligera para la base de datos PostgreSQL mediante Docker.
 
 **2. DOCUMENTACIÓN Y PUERTO DE PRUEBAS (ADMINER / SCALAR)**
---------------------------------------------------
+
+---
+
 * **Interfaz de Base de Datos (Adminer):**
 
   - Disponible en http://localhost:8083/.
@@ -58,7 +62,9 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
     de métodos POST y pruebas de endpoints.
 
 **3. ESTRUCTURA DE DATOS Y PAYLOADS (POST /api/analisis-energetico)**
---------------------------------------------------
+
+---
+
 **Campos requeridos en el JSON:**
 - consumo_kwh (Double): Cantidad de energía consumida en kWh (Ej: 250.5).
 - tipo_inmueble (String): Clasificación del inmueble ("RESIDENCIAL", "COMERCIAL", etc.).
@@ -79,12 +85,16 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
 }
 
 **4. PRUEBAS DE INTEGRACIÓN Y VALIDACIÓN (QA)**
---------------------------------------------------
+
+---
+
 - Happy Path (POST): Validado exitosamente a través de la interfaz de Scalar. La petición procesa los datos, calcula el perfil energético y persiste la información asignando un ID único en la base de datos PostgreSQL.
 - Consulta de Historial (GET): Validada la recuperación del registro persistido mediante el endpoint /api/analisis/{id} retornando código HTTP 200 OK y la marca de tiempo correspondiente.
 
 **5. CONFIGURACIÓN Y VARIABLES DE ENTORNO**
---------------------------------------------------
+
+---
+
 - Puerto de la Aplicación (Spring Boot): 8082
 - Puerto de la Base de Datos (PostgreSQL): 5432
 - Motor de Virtualización: WSL 2 / Docker Engine
@@ -92,7 +102,9 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
 - Nombre del Contenedor de la API: api-energi-ai
 
 **6. EJEMPLOS DE PETICIONES (cURL)**
---------------------------------------------------
+
+---
+
 # Petición POST:
 curl -X POST http://localhost:8082/api/analisis-energetico -H "Content-Type: application/json" -d "{\"consumo_kwh\": 250.5, \"tipo_inmueble\": \"RESIDENCIAL\", \"uso_horario_pico\": true, \"cantidad_equipos\": 3, \"horas_alto_consumo\": 4}"
 
