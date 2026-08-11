@@ -30,7 +30,11 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
 ### Card #07: CONTROLADOR REST (ENDPOINTS) (En curso) 🛠
 * **Objetivo:** Exponer los endpoints oficiales del sistema manteniendo un controlador delgado (*thin controller*).
 * **Avances técnicos:**
-* **REPORTE DE AVANCES 09-08-2026**
+
+### Card #08: MANEJO GLOBAL DE ERRORES (Por iniciar) ⌛
+* **Objetivo:** Centralizar la captura de excepciones para garantizar respuestas JSON limpias y con los códigos HTTP correctos.
+* **Avances técnicos:**
+  * **REPORTE DE AVANCES 09-08-2026**
   
 **1. RESUMEN DE CAMBIOS REALIZADOS**
 --------------------------------------------------
@@ -96,8 +100,4 @@ curl -X POST http://localhost:8082/api/analisis-energetico -H "Content-Type: app
 curl -X GET http://localhost:8082/api/analisis/1
     * *(Datos por agregar).*
 
-### Card #08: MANEJO GLOBAL DE ERRORES (Por iniciar) ⌛
-* **Objetivo:** Centralizar la captura de excepciones para garantizar respuestas JSON limpias y con los códigos HTTP correctos.
-* **Avances técnicos:**
-  * *(Datos por agregar).*
 ---
