@@ -134,11 +134,13 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
     ```bash
     curl -X POST http://localhost:8082/api/analisis-energetico \
       -H "Content-Type: application/json" \
-      -d '{"consumo_kwh": 250.5, 
+      -d '{
+           "consumo_kwh": 250.5, 
            "tipo_inmueble": "RESIDENCIAL",
            "uso_horario_pico": true,
            "cantidad_equipos": 3,
-           "horas_alto_consumo": 4}'
+           "horas_alto_consumo": 4
+           }'
     ```
 
 === "Petición GET"
