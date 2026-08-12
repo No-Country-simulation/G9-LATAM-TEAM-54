@@ -55,6 +55,7 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
 ### 3. Estructura de Datos y Payloads (`POST /api/analisis-energetico`)
 
 * **Parámetros requeridos en la Petición:**
+  
 | Parámetro | Tipo | Descripción |
 | :--- | :--- | :--- |
 | `consumo_kwh` | `Double` | Cantidad de energía consumida en kWh (Ej: 250.5). |
