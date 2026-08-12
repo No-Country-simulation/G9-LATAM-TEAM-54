@@ -37,6 +37,23 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
 
 ---
 
+## 📊 REPORTE DE AVANCES 07-08-2026
+
+### 1. Resumen de Cambios Realizados
+* **Persistencia y Base de Datos:** Se configuró PostgreSQL con volúmenes persistentes en Docker Compose, garantizando que los datos no se pierdan al apagar los contenedores.
+* **Actualización del Backend (Spring Boot):** Se adaptaron las entidades y servicios: categoría del perfil energético (Eficiente, Moderado, Ineficiente), probabilidad y costo estimado basado en la tarifa de referencia de $0,75 por kWh.
+* **Endpoints Operativos:**
+    * `POST /api/analisis-energetico`: Procesa los datos de consumo, guarda el registro en la base de datos y devuelve el JSON requerido con su ID.
+    * `GET /api/analisis/{id}`: Permite consultar el historial de un análisis específico desde la base de datos.
+
+---
+
+### 2. Documentación y Puerto de Pruebas (Scalar)
+* El proyecto incluye integración con Scalar para la documentación interactiva de la API.
+* Una vez que la aplicación esté corriendo, puedes acceder a la interfaz gráfica de Scalar en tu navegador en el siguiente puerto y ruta: `http://localhost:8082/scalar.html` (o según el puerto configurado en tu docker-compose).
+
+---
+
 ## 📊 REPORTE DE AVANCES 09-08-2026
 
 ### 1. Resumen de Cambios Realizados
