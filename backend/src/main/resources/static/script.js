@@ -92,7 +92,9 @@ async function analizar(){
 
         data.recomendaciones.forEach(r=>{
 
-            lista.innerHTML+=`<li>${r}</li>`;
+            const li = document.createElement("li");
+            li.textContent = r;
+            lista.appendChild(li);
 
         });
 
