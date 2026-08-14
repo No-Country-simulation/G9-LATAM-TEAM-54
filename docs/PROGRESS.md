@@ -4,9 +4,17 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
 
 ---
 
-## 🤖 1. Data Science & Machine Learning (En curso) 🛠
+## 🤖 1. Data Science & Machine Learning
 
-*(Datos por agregar).*
+* **Objetivo:** Desarrollar un flujo de trabajo completo de análisis energético, capaz de explorar y limpiar los datos, identificar patrones relevantes de consumo, transformar variables clave, entrenar y evaluar un modelo supervisado para clasificar la eficiencia energética de los hogares, generar recomendaciones automatizadas y dejar el modelo serializado para su uso futuro en aplicaciones o sistemas de monitoreo.
+* **Avances técnicos:**
+    * **Exploración y limpieza de datos (EDA):** revisión de estructura del dataset, tratamiento de valores nulos y duplicados, análisis descriptivo y transformación de la columna de fecha para extraer información temporal.
+    * **Análisis de patrones de consumo:** estudio del comportamiento energético por día de la semana y por mes, evaluación del impacto del tamaño del hogar, temperatura y uso en horas punta.
+    * **Procesamiento y transformación de variables:** creación de consumo per cápita, codificación de variables categóricas, definición de umbrales mediante percentiles y generación del perfil energético como variable objetivo.
+    * **Entrenamiento del modelo supervisado:** división del dataset en entrenamiento y prueba, normalización de variables y entrenamiento de un modelo Random Forest para clasificar hogares en tres niveles de eficiencia.
+    * **Evaluación del modelo:** análisis de métricas de desempeño (precision, recall, f1-score) y matriz de confusión para validar la capacidad del modelo de generalizar correctamente.
+    * **Generación de recomendaciones:** implementación de reglas basadas en el perfil energético y en condiciones específicas como temperatura y uso de aire acondicionado, además de recomendaciones derivadas de las predicciones del modelo.
+    * **Serialización del modelo:** guardado del modelo entrenado y del scaler para permitir su reutilización sin necesidad de reentrenamiento.
 
 ---
 
