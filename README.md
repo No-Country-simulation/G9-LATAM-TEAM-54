@@ -29,6 +29,12 @@ El sistema utiliza un modelo de Machine Learning entrenado con datos de consumo 
 * Spring Validation
 * Swagger / OpenAPI
 
+### Frontend
+
+* HTML
+* CSS
+* JavaScript
+
 ### Ciencia de Datos
 
 * Python
