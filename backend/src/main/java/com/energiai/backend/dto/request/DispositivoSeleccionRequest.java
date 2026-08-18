@@ -16,7 +16,10 @@ public class DispositivoSeleccionRequest {
     @DecimalMax(value = "24.0", message = "El uso diario no puede superar las 24 horas")
     private Double horasUsoDiarias;
 
-    private String alias; // Opcional
+    private String alias;
+
+    @NotNull(message = "La estancia es obligatoria")
+    private Long estanciaId;
 
     // Getters y Setters
     public Long getEquipoCatalogoId() { return equipoCatalogoId; }
@@ -30,4 +33,7 @@ public class DispositivoSeleccionRequest {
 
     public String getAlias() { return alias; }
     public void setAlias(String alias) { this.alias = alias; }
+
+    public Long getEstanciaId() { return estanciaId; }
+    public void setEstanciaId(Long estanciaId) { this.estanciaId = estanciaId; }
 }

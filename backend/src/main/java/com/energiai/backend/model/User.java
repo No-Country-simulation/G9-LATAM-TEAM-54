@@ -16,6 +16,8 @@ public class User {
     private String email;
     private String password;
     private String nombre;
+    private Integer householdSize;
+    private Double avgTemperatureC;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnalisisEntity> analisis;

@@ -30,6 +30,10 @@ public class DispositivoUsuario {
 
     private String alias;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estancia_id")
+    private Estancia estancia;
+
     // Constructores
     public DispositivoUsuario() {}
 
@@ -54,4 +58,7 @@ public class DispositivoUsuario {
 
     public String getAlias() { return alias; }
     public void setAlias(String alias) { this.alias = alias; }
+
+    public Estancia getEstancia() { return estancia; }
+    public void setEstancia(Estancia estancia) { this.estancia = estancia; }
 }

@@ -8,19 +8,20 @@ public class DispositivoResponse {
     private String nombreVariante;
     private Double horasUsoDiarias;
     private Double consumoMensualKwh;
+    private String nombreEstancia;
 
     public DispositivoResponse() {}
 
-    public DispositivoResponse(Long id, String alias, String nombreEquipo, String nombreVariante, Double horasUsoDiarias, Double consumoMensualKwh) {
+    public DispositivoResponse(Long id, String alias, String nombreEquipo, String nombreVariante, Double horasUsoDiarias, Double consumoMensualKwh, String nombreEstancia) {
         this.id = id;
         this.alias = alias;
         this.nombreEquipo = nombreEquipo;
         this.nombreVariante = nombreVariante;
         this.horasUsoDiarias = horasUsoDiarias;
         this.consumoMensualKwh = consumoMensualKwh;
+        this.nombreEstancia = nombreEstancia;
     }
 
-    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -38,4 +39,7 @@ public class DispositivoResponse {
 
     public Double getConsumoMensualKwh() { return consumoMensualKwh; }
     public void setConsumoMensualKwh(Double consumoMensualKwh) { this.consumoMensualKwh = consumoMensualKwh; }
+
+    public String getNombreEstancia() { return nombreEstancia; }
+    public void setNombreEstancia(String nombreEstancia) { this.nombreEstancia = nombreEstancia; }
 }

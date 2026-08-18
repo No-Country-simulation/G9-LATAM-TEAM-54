@@ -3,12 +3,14 @@ package com.energiai.backend.service;
 import com.energiai.backend.dto.request.DispositivoSeleccionRequest;
 import com.energiai.backend.dto.response.DispositivoResponse;
 import com.energiai.backend.model.DispositivoUsuario;
+import com.energiai.backend.model.Estancia;
 import com.energiai.backend.model.EquipoCatalogo;
 import com.energiai.backend.model.EquipoVariante;
 import com.energiai.backend.model.User;
 import com.energiai.backend.repository.DispositivoUsuarioRepository;
 import com.energiai.backend.repository.EquipoCatalogoRepository;
 import com.energiai.backend.repository.EquipoVarianteRepository;
+import com.energiai.backend.repository.EstanciaRepository;
 import com.energiai.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,17 +26,20 @@ public class DispositivoService {
     private final EquipoVarianteRepository varianteRepository;
     private final AnalisisService analisisService;
     private final UserRepository userRepository;
+    private final EstanciaRepository estanciaRepository;
 
     public DispositivoService(DispositivoUsuarioRepository repository,
                               EquipoCatalogoRepository catalogoRepository,
                               EquipoVarianteRepository varianteRepository,
                               AnalisisService analisisService,
-                              UserRepository userRepository) {
+                              UserRepository userRepository,
+                              EstanciaRepository estanciaRepository) {
         this.repository = repository;
         this.catalogoRepository = catalogoRepository;
         this.varianteRepository = varianteRepository;
         this.analisisService = analisisService;
         this.userRepository = userRepository;
+        this.estanciaRepository = estanciaRepository;
     }
 
     @Transactional
@@ -45,6 +50,9 @@ public class DispositivoService {
         EquipoCatalogo equipo = catalogoRepository.findById(request.getEquipoCatalogoId())
                 .orElseThrow(() -> new RuntimeException("Equipo no encontrado"));
 
+        Estancia estancia = estanciaRepository.findById(request.getEstanciaId())
+                .orElseThrow(() -> new RuntimeException("Estancia no encontrada"));
+
         Double consumoKwh = analisisService.calcularConsumoDispositivo(request);
 
         DispositivoUsuario dispositivo = new DispositivoUsuario();
@@ -53,8 +61,8 @@ public class DispositivoService {
         dispositivo.setHorasUsoDiarias(request.getHorasUsoDiarias());
         dispositivo.setConsumoMensualKwh(consumoKwh);
         dispositivo.setAlias(request.getAlias());
+        dispositivo.setEstancia(estancia);
 
-        // Si hay variante, asignarla
         if (request.getEquipoVarianteId() != null) {
             EquipoVariante variante = varianteRepository.findById(request.getEquipoVarianteId())
                     .orElseThrow(() -> new RuntimeException("Variante no encontrada"));
@@ -65,9 +73,6 @@ public class DispositivoService {
         return mapToResponse(guardado);
     }
 
-    /**
-     * Lista todos los dispositivos guardados
-     */
     public List<DispositivoResponse> listarDispositivos(String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -78,9 +83,6 @@ public class DispositivoService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Elimina un dispositivo
-     */
     @Transactional
     public boolean eliminarDispositivo(Long id, String email) {
         User usuario = userRepository.findByEmail(email)
@@ -97,9 +99,8 @@ public class DispositivoService {
 
     private DispositivoResponse mapToResponse(DispositivoUsuario entidad) {
         String nombreEquipo = entidad.getEquipoCatalogo() != null ? entidad.getEquipoCatalogo().getNombre() : null;
-
-        // Usamos getEtiqueta() en lugar de getNombre() para la variante
         String nombreVariante = entidad.getEquipoVariante() != null ? entidad.getEquipoVariante().getEtiqueta() : null;
+        String nombreEstancia = entidad.getEstancia() != null ? entidad.getEstancia().getNombre() : null;
 
         return new DispositivoResponse(
                 entidad.getId(),
@@ -107,7 +108,8 @@ public class DispositivoService {
                 nombreEquipo,
                 nombreVariante,
                 entidad.getHorasUsoDiarias(),
-                entidad.getConsumoMensualKwh()
+                entidad.getConsumoMensualKwh(),
+                nombreEstancia
         );
     }
 }

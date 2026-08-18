@@ -1,6 +1,5 @@
 package com.energiai.backend.controller;
 
-import com.energiai.backend.dto.request.AnalisisRequest;
 import com.energiai.backend.dto.request.DispositivoSeleccionRequest;
 import com.energiai.backend.dto.response.AnalisisResponse;
 import com.energiai.backend.dto.response.EstadisticasResponse;
@@ -26,13 +25,9 @@ public class AnalisisController {
     }
 
     @PostMapping("/analisis-energetico")
-    public ResponseEntity<Object> realizarAnalisisEnergetico(
-            @Valid @RequestBody AnalisisRequest requestDTO,
-            Principal principal
-    ) {
-        // JWT pasa el correo
+    public ResponseEntity<Object> realizarAnalisisEnergetico(Principal principal) {
         String emailUsuario = principal.getName();
-        Object resultado = analisisService.ejecutarAnalisis(emailUsuario, requestDTO);
+        Object resultado = analisisService.ejecutarAnalisis(emailUsuario);
         return ResponseEntity.ok(resultado);
     }
 

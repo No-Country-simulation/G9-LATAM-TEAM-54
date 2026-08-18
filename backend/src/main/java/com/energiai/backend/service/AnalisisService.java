@@ -55,9 +55,6 @@ public class AnalisisService {
         this.dispositivoUsuarioRepository = dispositivoUsuarioRepository;
     }
 
-
-     //Calcula el consumo en kWh de un dispositivo seleccionado del catálogo y lo retorna.
-
     public Double calcularConsumoDispositivo(DispositivoSeleccionRequest request) {
         EquipoCatalogo equipo = equipoCatalogoRepository.findById(request.getEquipoCatalogoId())
                 .orElseThrow(() -> new RuntimeException("Equipo de catálogo no encontrado"));
@@ -84,12 +81,8 @@ public class AnalisisService {
             potenciaWatts = equipo.getPotenciaBaseWatts();
         }
 
-        // Fórmula: (Potencia en Watts * Horas Diarias * 30 días) / 1000
         return (potenciaWatts * request.getHorasUsoDiarias() * 30) / 1000.0;
     }
-
-
-     //Suma el consumo mensual total de todos los dispositivos registrados por el usuario.
 
     public double calcularConsumoTotalInventario(Long userId) {
         return dispositivoUsuarioRepository.findByUserId(userId)
@@ -98,40 +91,59 @@ public class AnalisisService {
                 .sum();
     }
 
-    public Map<String, Object> ejecutarAnalisis(String email, AnalisisRequest request) {
+    public Map<String, Object> ejecutarAnalisis(String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el correo: " + email));
 
-        // Consumo no especificado
-        double consumoActual;
-        if (request.getConsumo_kwh() == null || request.getConsumo_kwh() <= 0.0) {
-            consumoActual = calcularConsumoTotalInventario(usuario.getId());
-        } else {
-            consumoActual = request.getConsumo_kwh();
-        }
+        List<DispositivoUsuario> dispositivosUsuario = dispositivoUsuarioRepository.findByUserId(usuario.getId());
+
+        int cantidadEquipos = dispositivosUsuario.size();
+        double consumoMensual = dispositivosUsuario.stream()
+                .mapToDouble(DispositivoUsuario::getConsumoMensualKwh)
+                .sum();
+
+        boolean hasAc = dispositivosUsuario.stream()
+                .anyMatch(d -> d.getEquipoCatalogo() != null &&
+                        d.getEquipoCatalogo().getNombre().toLowerCase().contains("aire"));
+
+        int householdSize = usuario.getHouseholdSize() != null ? usuario.getHouseholdSize() : 3;
+        double avgTemperatureC = usuario.getAvgTemperatureC() != null ? usuario.getAvgTemperatureC() : 28.0;
+
+        double consumoDiarioEstimado = consumoMensual / 30.0;
+
+        float peakHoursDiario = (float) dispositivosUsuario.stream()
+                .mapToDouble(DispositivoUsuario::getHorasUsoDiarias)
+                .average()
+                .orElse(3.0);
 
         float[] inputData = new float[] {
-                (float) consumoActual,
-                request.getHouseholdSize() != null ? request.getHouseholdSize().floatValue() : 1.0f,
-                request.getAvgTemperatureC() != null ? request.getAvgTemperatureC().floatValue() : 24.0f,
-                Boolean.TRUE.equals(request.getHasAc()) ? 1.0f : 0.0f,
-                request.getPeakHoursUsageKwh() != null ? request.getPeakHoursUsageKwh().floatValue() : 0.0f
+                (float) consumoDiarioEstimado,
+                (float) householdSize,
+                (float) avgTemperatureC,
+                hasAc ? 1.0f : 0.0f,
+                peakHoursDiario
         };
 
-        return ejecutarAnalisis(inputData, consumoActual, request, usuario);
+        AnalisisRequest datosReales = new AnalisisRequest();
+        datosReales.setHouseholdSize(householdSize);
+        datosReales.setCantidadEquipos(cantidadEquipos);
+        datosReales.setConsumo_kwh(consumoMensual);
+        datosReales.setHasAc(hasAc);
+
+        return ejecutarAnalisis(inputData, consumoMensual, datosReales, usuario);
     }
 
     @Transactional
-    public Map<String, Object> ejecutarAnalisis(float[] inputData, double consumoActual, AnalisisRequest request, User usuario) {
+    public Map<String, Object> ejecutarAnalisis(float[] inputData, double consumoMensual, AnalisisRequest request, User usuario) {
         PredictionService.PrediccionResultado resultadoPrediccion = predictionService.predecir(inputData);
         CategoriaEnergetica categoria = resultadoPrediccion.categoria();
         double probabilidad = resultadoPrediccion.probabilidad();
 
-        double costoEstimado = costService.calcularCosto(consumoActual);
-        List<String> recomendaciones = recommendationsService.generarRecomendaciones(consumoActual, categoria, 0.0);
+        double costoEstimado = costService.calcularCosto(consumoMensual);
+        List<String> recomendaciones = recommendationsService.generarRecomendaciones(consumoMensual, categoria, 0.0);
 
         AnalisisEntity entidad = new AnalisisEntity();
-        entidad.setConsumoActual(consumoActual);
+        entidad.setConsumoActual(consumoMensual);
         entidad.setCostoEstimado(costoEstimado);
         entidad.setCategoria(categoria);
         entidad.setProbabilidad(probabilidad);
@@ -149,7 +161,7 @@ public class AnalisisService {
         resultado.put("id", guardado.getId());
         resultado.put("categoria", categoria);
         resultado.put("probabilidad", probabilidad);
-        resultado.put("consumoActual", consumoActual);
+        resultado.put("consumoActual", consumoMensual);
         resultado.put("costoEstimado", costoEstimado);
         resultado.put("recomendaciones", recomendaciones);
 

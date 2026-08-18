@@ -82,8 +82,8 @@ public class PredictionService {
                 }
             }
         } catch (OrtException e) {
-            logger.error("Error durante la ejecución de la inferencia ONNX: {}", e.getMessage(), e);
-            throw new RuntimeException("Error en la inferencia del modelo", e);
+            logger.error("Error detallado de ONNX Runtime: [Mensaje: {}] [Causa: {}]", e.getMessage(), e.getCause(), e);
+            throw new RuntimeException("Error en la inferencia del modelo: " + e.getMessage(), e);
         }
     }
 
