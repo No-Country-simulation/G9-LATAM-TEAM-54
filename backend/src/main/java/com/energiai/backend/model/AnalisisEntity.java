@@ -15,12 +15,21 @@ public class AnalisisEntity {
 
     private Double consumoActual;
     private Double costoEstimado;
-    private Double prediccion;
-    private String categoria;
+
+    private Integer cantidadEquipos;
+    private Integer householdSize;
+
+    @Enumerated(EnumType.STRING)
+    private CategoriaEnergetica categoria;
+
     private Double probabilidad;
 
     @Column(columnDefinition = "TEXT")
     private String recomendaciones;
 
     private LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private User user;
 }
