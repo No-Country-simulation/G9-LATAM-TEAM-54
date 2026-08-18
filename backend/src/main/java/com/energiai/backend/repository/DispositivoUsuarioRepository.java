@@ -11,4 +11,6 @@ public interface DispositivoUsuarioRepository extends JpaRepository<DispositivoU
 
     List<DispositivoUsuario> findByUserId(Long userId);
 
+    List<DispositivoUsuario> findByUserIdAndEstanciaId(Long userId, Long estanciaId);
+
 }
