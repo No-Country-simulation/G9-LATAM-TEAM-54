@@ -7,6 +7,7 @@ import com.energiai.backend.dto.response.EstadisticasResponse;
 import com.energiai.backend.model.AnalisisEntity;
 import com.energiai.backend.model.CategoriaEnergetica;
 import com.energiai.backend.model.DispositivoUsuario;
+import com.energiai.backend.model.Estancia;
 import com.energiai.backend.model.EquipoCatalogo;
 import com.energiai.backend.model.EquipoVariante;
 import com.energiai.backend.model.User;
@@ -63,7 +64,7 @@ public class AnalisisService {
 
         if (Boolean.TRUE.equals(equipo.getTieneVariantes())) {
             if (request.getEquipoVarianteId() == null) {
-                throw new IllegalArgumentException("Este equipo requiere seleccionar una variante específica (ej. BTU)");
+                throw new IllegalArgumentException("Este equipo requiere seleccionar una variante específica");
             }
 
             EquipoVariante variante = equipoVarianteRepository.findById(request.getEquipoVarianteId())
@@ -157,6 +158,27 @@ public class AnalisisService {
 
         AnalisisEntity guardado = analisisRepository.save(entidad);
 
+        List<DispositivoUsuario> dispositivos = dispositivoUsuarioRepository.findByUserId(usuario.getId());
+
+        Map<Estancia, List<DispositivoUsuario>> dispositivosPorEstancia = dispositivos.stream()
+                .filter(d -> d.getEstancia() != null)
+                .collect(Collectors.groupingBy(DispositivoUsuario::getEstancia));
+
+        List<Map<String, Object>> desgloseEstancias = dispositivosPorEstancia.entrySet().stream().map(entry -> {
+            Estancia estancia = entry.getKey();
+            List<DispositivoUsuario> listaDisp = entry.getValue();
+
+            double consumoEstancia = listaDisp.stream().mapToDouble(DispositivoUsuario::getConsumoMensualKwh).sum();
+            double costoEstancia = costService.calcularCosto(consumoEstancia);
+
+            Map<String, Object> estanciaMap = new HashMap<>();
+            estanciaMap.put("id", estancia.getId());
+            estanciaMap.put("nombreEstancia", estancia.getNombre());
+            estanciaMap.put("consumoKwh", Math.round(consumoEstancia * 10.0) / 10.0);
+            estanciaMap.put("costo", Math.round(costoEstancia * 100.0) / 100.0);
+            return estanciaMap;
+        }).collect(Collectors.toList());
+
         Map<String, Object> resultado = new HashMap<>();
         resultado.put("id", guardado.getId());
         resultado.put("categoria", categoria);
@@ -164,6 +186,7 @@ public class AnalisisService {
         resultado.put("consumoActual", consumoMensual);
         resultado.put("costoEstimado", costoEstimado);
         resultado.put("recomendaciones", recomendaciones);
+        resultado.put("desgloseEstancias", desgloseEstancias);
 
         if (request != null) {
             resultado.put("householdSize", request.getHouseholdSize());

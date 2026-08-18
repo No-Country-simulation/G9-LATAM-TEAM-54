@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -33,5 +34,20 @@ public class UserController {
                 .toList();
 
         return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> obtenerPerfilActual(Principal principal) {
+        String email = principal.getName();
+        User usuario = userService.buscarPorEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        UserResponse response = new UserResponse(
+                usuario.getId(),
+                usuario.getEmail(),
+                usuario.getNombre()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
