@@ -12,10 +12,16 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d energiai_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   app-energi:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: api-energi-ai
     ports:
@@ -27,7 +33,21 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=tu_contrasena
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: energiai-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - app-energi
     restart: unless-stopped
     networks:
       - app-network
@@ -38,7 +58,8 @@ services:
     ports:
       - "8083:8080"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - app-network
