@@ -1,6 +1,4 @@
--- ============================
--- 1. Opciones de Temperatura
--- ============================
+-- 1. Opciones de Temperatura:
 
 INSERT INTO "opciones_temperatura" (id, activo, etiqueta, orden, valor_numerico)
 SELECT 1, true, 'Fría (~12º)', 1, 12
@@ -22,9 +20,7 @@ INSERT INTO "opciones_temperatura" (id, activo, etiqueta, orden, valor_numerico)
 SELECT 5, true, 'Muy Caluroso (~35º)', 5, 35
     WHERE NOT EXISTS (SELECT 1 FROM "opciones_temperatura" WHERE id = 5);
 
--- ============================
--- 2. Catalogo de Equipos
--- ============================
+-- 2. Catalogo de Equipos:
 
 INSERT INTO "equipo_catalogo" (id, nombre, categoria_uso, tiene_variantes, potencia_base_watts)
 SELECT 1, 'Aire Acondicionado', 'Climatización', true, NULL
@@ -66,9 +62,7 @@ INSERT INTO "equipo_catalogo" (id, nombre, categoria_uso, tiene_variantes, poten
 SELECT 10, 'Router Wi-Fi', 'Tecnología', false, 15.0
     WHERE NOT EXISTS (SELECT 1 FROM "equipo_catalogo" WHERE id = 10);
 
--- ============================
--- 3. Variantes de Equipos
--- ============================
+-- 3. Variantes de Equipos:
 
 INSERT INTO "equipo_variante" (id, equipo_catalogo_id, etiqueta, potencia_watts)
 SELECT 1, 1, '9,000 BTU', 900.0
@@ -86,9 +80,8 @@ INSERT INTO "equipo_variante" (id, equipo_catalogo_id, etiqueta, potencia_watts)
 SELECT 4, 1, '24,000 BTU', 2400.0
     WHERE NOT EXISTS (SELECT 1 FROM "equipo_variante" WHERE id = 4);
 
--- ==========================================
--- 4.Estancias
--- ==========================================
+-- 4. Estancias:
+
 INSERT INTO "estancias" (id, nombre)
 SELECT 1, 'Sala / Sala de Estar'
     WHERE NOT EXISTS (SELECT 1 FROM "estancias" WHERE id = 1);
