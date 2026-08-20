@@ -41,4 +41,19 @@ public class EquipoService {
             return dto;
         }).collect(Collectors.toList());
     }
+
+    public List<EquipoVarianteResponse> obtenerVariantesPorEquipo(Long equipoId) {
+        return equipoCatalogoRepository.findById(equipoId)
+                .map(equipo -> {
+                    if (equipo.getVariantes() == null) return List.<EquipoVarianteResponse>of();
+                    return equipo.getVariantes().stream().map(v -> {
+                        EquipoVarianteResponse vDto = new EquipoVarianteResponse();
+                        vDto.setId(v.getId());
+                        vDto.setEtiqueta(v.getEtiqueta());
+                        vDto.setPotenciaWatts(v.getPotenciaWatts());
+                        return vDto;
+                    }).collect(Collectors.toList());
+                })
+                .orElse(List.of());
+    }
 }

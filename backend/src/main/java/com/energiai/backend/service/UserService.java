@@ -1,5 +1,6 @@
 package com.energiai.backend.service;
 
+import com.energiai.backend.dto.request.ConfiguracionInicialRequest;
 import com.energiai.backend.dto.request.UserRequest;
 import com.energiai.backend.model.User;
 import com.energiai.backend.repository.UserRepository;
@@ -36,5 +37,15 @@ public class UserService {
 
     public Optional<User> buscarPorEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public User actualizarConfiguracionInicial(String email, ConfiguracionInicialRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        user.setAvgTemperatureC(request.getAvgTemperatureC());
+        user.setHouseholdSize(request.getHouseholdSize());
+
+        return userRepository.save(user);
     }
 }

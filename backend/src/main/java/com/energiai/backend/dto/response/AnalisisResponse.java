@@ -13,7 +13,7 @@ import java.util.List;
 public class AnalisisResponse {
     private Long id;
     private Double consumoActual;
-    private Double costoEstimadoMensual;
+    private Double costoEstimado;
     private CategoriaEnergetica categoria;
     private Double probabilidad;
     private List<String> recomendaciones;

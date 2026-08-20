@@ -20,7 +20,7 @@ public class EquipoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EquipoCatalogoResponse>> listarCatalogo() { // <--- Cambiado a EquipoCatalogoResponse
+    public ResponseEntity<List<EquipoCatalogoResponse>> listarCatalogo() {
         List<EquipoCatalogoResponse> catalogo = equipoService.obtenerCatalogoCompleto();
         return ResponseEntity.ok(catalogo);
     }

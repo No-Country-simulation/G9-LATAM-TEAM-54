@@ -4,6 +4,8 @@ import com.energiai.backend.dto.request.AnalisisRequest;
 import com.energiai.backend.dto.request.DispositivoSeleccionRequest;
 import com.energiai.backend.dto.response.AnalisisResponse;
 import com.energiai.backend.dto.response.EstadisticasResponse;
+import com.energiai.backend.dto.response.FinalAnalisisResponse;
+import com.energiai.backend.dto.response.EstanciaDesgloseResponse;
 import com.energiai.backend.model.AnalisisEntity;
 import com.energiai.backend.model.CategoriaEnergetica;
 import com.energiai.backend.model.DispositivoUsuario;
@@ -20,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -92,7 +93,7 @@ public class AnalisisService {
                 .sum();
     }
 
-    public Map<String, Object> ejecutarAnalisis(String email) {
+    public FinalAnalisisResponse ejecutarAnalisis(String email) {
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el correo: " + email));
 
@@ -135,7 +136,7 @@ public class AnalisisService {
     }
 
     @Transactional
-    public Map<String, Object> ejecutarAnalisis(float[] inputData, double consumoMensual, AnalisisRequest request, User usuario) {
+    public FinalAnalisisResponse ejecutarAnalisis(float[] inputData, double consumoMensual, AnalisisRequest request, User usuario) {
         PredictionService.PrediccionResultado resultadoPrediccion = predictionService.predecir(inputData);
         CategoriaEnergetica categoria = resultadoPrediccion.categoria();
         double probabilidad = resultadoPrediccion.probabilidad();
@@ -164,36 +165,32 @@ public class AnalisisService {
                 .filter(d -> d.getEstancia() != null)
                 .collect(Collectors.groupingBy(DispositivoUsuario::getEstancia));
 
-        List<Map<String, Object>> desgloseEstancias = dispositivosPorEstancia.entrySet().stream().map(entry -> {
+        List<EstanciaDesgloseResponse> desgloseEstancias = dispositivosPorEstancia.entrySet().stream().map(entry -> {
             Estancia estancia = entry.getKey();
             List<DispositivoUsuario> listaDisp = entry.getValue();
 
             double consumoEstancia = listaDisp.stream().mapToDouble(DispositivoUsuario::getConsumoMensualKwh).sum();
             double costoEstancia = costService.calcularCosto(consumoEstancia);
 
-            Map<String, Object> estanciaMap = new HashMap<>();
-            estanciaMap.put("id", estancia.getId());
-            estanciaMap.put("nombreEstancia", estancia.getNombre());
-            estanciaMap.put("consumoKwh", Math.round(consumoEstancia * 10.0) / 10.0);
-            estanciaMap.put("costo", Math.round(costoEstancia * 100.0) / 100.0);
-            return estanciaMap;
+            return EstanciaDesgloseResponse.builder()
+                    .id(estancia.getId())
+                    .nombreEstancia(estancia.getNombre())
+                    .consumoKwh(Math.round(consumoEstancia * 10.0) / 10.0)
+                    .costo(Math.round(costoEstancia * 100.0) / 100.0)
+                    .build();
         }).collect(Collectors.toList());
 
-        Map<String, Object> resultado = new HashMap<>();
-        resultado.put("id", guardado.getId());
-        resultado.put("categoria", categoria);
-        resultado.put("probabilidad", probabilidad);
-        resultado.put("consumoActual", consumoMensual);
-        resultado.put("costoEstimado", costoEstimado);
-        resultado.put("recomendaciones", recomendaciones);
-        resultado.put("desgloseEstancias", desgloseEstancias);
-
-        if (request != null) {
-            resultado.put("householdSize", request.getHouseholdSize());
-            resultado.put("cantidadEquipos", request.getCantidadEquipos());
-        }
-
-        return resultado;
+        return FinalAnalisisResponse.builder()
+                .id(guardado.getId())
+                .categoria(categoria)
+                .probabilidad(probabilidad)
+                .consumoActual(consumoMensual)
+                .costoEstimado(costoEstimado)
+                .recomendaciones(recomendaciones)
+                .desgloseEstancias(desgloseEstancias)
+                .householdSize(request != null ? request.getHouseholdSize() : null)
+                .cantidadEquipos(request != null ? request.getCantidadEquipos() : null)
+                .build();
     }
 
     public Optional<AnalisisEntity> obtenerPorId(Long id, String email) {
@@ -214,7 +211,7 @@ public class AnalisisService {
                     AnalisisResponse dto = new AnalisisResponse();
                     dto.setId(entidad.getId());
                     dto.setConsumoActual(entidad.getConsumoActual());
-                    dto.setCostoEstimadoMensual(entidad.getCostoEstimado());
+                    dto.setCostoEstimado(entidad.getCostoEstimado());
                     dto.setCategoria(entidad.getCategoria());
                     dto.setProbabilidad(entidad.getProbabilidad());
                     dto.setRecomendaciones(Arrays.asList(entidad.getRecomendaciones().split("\n")));

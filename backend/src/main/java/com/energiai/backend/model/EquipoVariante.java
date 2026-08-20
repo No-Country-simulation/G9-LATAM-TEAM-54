@@ -20,7 +20,6 @@ public class EquipoVariante {
     @Column(nullable = false)
     private Double potenciaWatts; // Ej: 900.0, 1200.0
 
-    // Getters, Setters y Constructores
     public EquipoVariante() {}
 
     public Long getId() { return id; }

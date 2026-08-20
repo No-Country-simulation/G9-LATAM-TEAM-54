@@ -13,10 +13,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
     private String nombre;
+
+    @Column(name = "household_size")
     private Integer householdSize;
+
+    @Column(name = "avg_temperaturec")
     private Double avgTemperatureC;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,5 +1,6 @@
 package com.energiai.backend.controller;
 
+import com.energiai.backend.dto.request.ConfiguracionInicialRequest;
 import com.energiai.backend.dto.request.UserRequest;
 import com.energiai.backend.dto.response.UserResponse;
 import com.energiai.backend.model.User;
@@ -30,7 +31,13 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserResponse>> listarUsuarios() {
         List<UserResponse> usuarios = userService.listarUsuarios().stream()
-                .map(user -> new UserResponse(user.getId(), user.getEmail(), user.getNombre()))
+                .map(user -> new UserResponse(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getNombre(),
+                        user.getHouseholdSize(),
+                        user.getAvgTemperatureC()
+                ))
                 .toList();
 
         return ResponseEntity.ok(usuarios);
@@ -45,7 +52,28 @@ public class UserController {
         UserResponse response = new UserResponse(
                 usuario.getId(),
                 usuario.getEmail(),
-                usuario.getNombre()
+                usuario.getNombre(),
+                usuario.getHouseholdSize(),
+                usuario.getAvgTemperatureC()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/configuracion-inicial")
+    public ResponseEntity<UserResponse> configurarPerfilInicial(
+            Principal principal,
+            @Valid @RequestBody ConfiguracionInicialRequest request
+    ) {
+        String email = principal.getName();
+        User usuarioActualizado = userService.actualizarConfiguracionInicial(email, request);
+
+        UserResponse response = new UserResponse(
+                usuarioActualizado.getId(),
+                usuarioActualizado.getEmail(),
+                usuarioActualizado.getNombre(),
+                usuarioActualizado.getHouseholdSize(),
+                usuarioActualizado.getAvgTemperatureC()
         );
 
         return ResponseEntity.ok(response);

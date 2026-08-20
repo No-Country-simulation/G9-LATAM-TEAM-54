@@ -1,6 +1,8 @@
 package com.energiai.backend.controller;
 
 import com.energiai.backend.dto.response.EquipoCatalogoResponse;
+import com.energiai.backend.dto.response.EquipoVarianteResponse;
+import org.springframework.web.bind.annotation.PathVariable;
 import com.energiai.backend.service.EquipoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +23,13 @@ public class CatalogoController {
 
     @GetMapping
     public ResponseEntity<List<EquipoCatalogoResponse>> listarCatalogo() {
-        List<EquipoCatalogoResponse> catalogo = equipoService.obtenerCatalogoCompleto(); // O el método que liste el catálogo en tu EquipoService
+        List<EquipoCatalogoResponse> catalogo = equipoService.obtenerCatalogoCompleto();
         return ResponseEntity.ok(catalogo);
+    }
+
+    @GetMapping("/{id}/variantes")
+    public ResponseEntity<List<EquipoVarianteResponse>> listarVariantesPorEquipo(@PathVariable Long id) {
+        List<EquipoVarianteResponse> variantes = equipoService.obtenerVariantesPorEquipo(id);
+        return ResponseEntity.ok(variantes);
     }
 }

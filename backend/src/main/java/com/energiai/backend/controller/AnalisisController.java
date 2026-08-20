@@ -3,6 +3,7 @@ package com.energiai.backend.controller;
 import com.energiai.backend.dto.request.DispositivoSeleccionRequest;
 import com.energiai.backend.dto.response.AnalisisResponse;
 import com.energiai.backend.dto.response.EstadisticasResponse;
+import com.energiai.backend.dto.response.FinalAnalisisResponse;
 import com.energiai.backend.service.AnalisisService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,9 @@ public class AnalisisController {
     }
 
     @PostMapping("/analisis-energetico")
-    public ResponseEntity<Object> realizarAnalisisEnergetico(Principal principal) {
+    public ResponseEntity<FinalAnalisisResponse> realizarAnalisisEnergetico(Principal principal) {
         String emailUsuario = principal.getName();
-        Object resultado = analisisService.ejecutarAnalisis(emailUsuario);
+        FinalAnalisisResponse resultado = analisisService.ejecutarAnalisis(emailUsuario);
         return ResponseEntity.ok(resultado);
     }
 
