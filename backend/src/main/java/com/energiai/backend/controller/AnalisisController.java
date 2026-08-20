@@ -82,8 +82,8 @@ public class AnalisisController {
     public ResponseEntity<Void> eliminarAnalisis(@PathVariable("id") Long id) {
         boolean eliminado = analisisService.eliminarAnalisis(id);
         if (eliminado) {
-            return ResponseEntity.noContent().build(); // 204 No Content
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.notFound().build(); // 404 Not Found
+        return ResponseEntity.notFound().build();
     }
 }

@@ -4,20 +4,24 @@ spring:
   main:
     web-application-type: servlet
   datasource:
-    url: jdbc:postgresql://postgres:5432/energiai_db
-    username: postgres
-    password: tu_contrasena
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/energiai_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:tu_contrasena}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
   sql:
     init:
       mode: never
   docker:
     compose:
       enabled: false
+
+jwt:
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D6351655468576D5A7134743777217A25432A}
+  expiration-ms: 86400000
 
 server:
   port: 8082

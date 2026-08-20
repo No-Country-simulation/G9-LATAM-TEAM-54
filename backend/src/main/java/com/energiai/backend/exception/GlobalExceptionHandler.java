@@ -14,7 +14,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Captura errores de validación - 400 Bad Request
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> erroresCampos = new HashMap<>();
@@ -31,8 +30,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    // Errores del modelo ONNX
-    // Excepción para pruebas
     @ExceptionHandler(ModelInferenceException.class)
     public ResponseEntity<Map<String, Object>> handleModelInferenceException(ModelInferenceException ex) {
         Map<String, Object> response = new HashMap<>();
@@ -44,7 +41,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
-    // Excepciones no controladas -> 500 Internal Server Error
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleAllUncaughtException(Exception ex) {
         Map<String, Object> response = new HashMap<>();

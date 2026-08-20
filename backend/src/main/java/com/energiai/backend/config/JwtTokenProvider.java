@@ -1,20 +1,37 @@
 package com.energiai.backend.config;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
 
-    // Secret pass
-    private final Key jwtSecret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    @Value("${jwt.secret}")
+    private String jwtSecretString;
 
-    // Timer
-    private final long jwtExpirationInMs = 86400000;
+    @Value("${jwt.expiration-ms:86400000}")
+    private long jwtExpirationInMs;
+
+    private Key jwtSecret;
+
+    @PostConstruct
+    public void init() {
+        try {
+            byte[] keyBytes = Decoders.BASE64.decode(jwtSecretString);
+            this.jwtSecret = Keys.hmacShaKeyFor(keyBytes);
+        } catch (Exception e) {
+            byte[] keyBytes = jwtSecretString.getBytes(StandardCharsets.UTF_8);
+            this.jwtSecret = Keys.hmacShaKeyFor(keyBytes);
+        }
+    }
 
     public String generarToken(String email) {
         Date ahora = new Date();
@@ -43,7 +60,6 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            // Token inválido, expirado o malformado
             return false;
         }
     }

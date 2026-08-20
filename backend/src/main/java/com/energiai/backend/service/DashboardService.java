@@ -7,7 +7,6 @@ import com.energiai.backend.model.DispositivoUsuario;
 import com.energiai.backend.model.User;
 import com.energiai.backend.repository.DispositivoUsuarioRepository;
 import com.energiai.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,20 +17,25 @@ import java.util.stream.Collectors;
 @Service
 public class DashboardService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final DispositivoUsuarioRepository dispositivoUsuarioRepository;
+    private final CostService costService;
+    private final PredictionService predictionService;
+    private final RecommendationsService recommendationsService;
 
-    @Autowired
-    private DispositivoUsuarioRepository dispositivoUsuarioRepository;
-
-    @Autowired
-    private CostService costService;
-
-    @Autowired
-    private PredictionService predictionService;
-
-    @Autowired
-    private RecommendationsService recommendationsService;
+    public DashboardService(
+            UserRepository userRepository,
+            DispositivoUsuarioRepository dispositivoUsuarioRepository,
+            CostService costService,
+            PredictionService predictionService,
+            RecommendationsService recommendationsService
+    ) {
+        this.userRepository = userRepository;
+        this.dispositivoUsuarioRepository = dispositivoUsuarioRepository;
+        this.costService = costService;
+        this.predictionService = predictionService;
+        this.recommendationsService = recommendationsService;
+    }
 
     @Transactional(readOnly = true)
     public DashboardResponse calcularEstadoActualPorUsuario(String email) {
@@ -46,7 +50,6 @@ public class DashboardService {
 
         double costoTotal = costService.calcularCosto(consumoTotal);
 
-        // --- Lógica alineada con AnalisisService para la inferencia ---
         double consumoDiarioEstimado = consumoTotal / 30.0;
 
         boolean hasAc = dispositivos.stream()
@@ -77,7 +80,6 @@ public class DashboardService {
                 prediccion.categoria(),
                 prediccion.probabilidad()
         );
-        // -------------------------------------------------------------
 
         Map<Long, List<DispositivoUsuario>> porEstancia = dispositivos.stream()
                 .filter(d -> d.getEstancia() != null)
