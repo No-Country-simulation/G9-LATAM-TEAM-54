@@ -6,15 +6,31 @@ Este documento recopila el avance cronológico y el estado de las tareas del pro
 
 ## 🤖 1. Data Science & Machine Learning
 
-* **Objetivo:** Desarrollar un flujo de trabajo completo de análisis energético, capaz de explorar y limpiar los datos, identificar patrones relevantes de consumo, transformar variables clave, entrenar y evaluar un modelo supervisado para clasificar la eficiencia energética de los hogares, generar recomendaciones automatizadas y dejar el modelo serializado para su uso futuro en aplicaciones o sistemas de monitoreo.
+* **Objetivo:** Desarrollar un flujo de trabajo completo de análisis energético, capaz de explorar y limpiar los datos, identificar patrones relevantes de consumo, transformar variables clave, entrenar y evaluar un modelo supervisado para clasificar la eficiencia energética de los hogares, generar recomendaciones automatizadas y serializar el modelo para su uso futuro en aplicaciones o sistemas de monitoreo.
 * **Avances técnicos:**
     * **Exploración y limpieza de datos (EDA):** revisión de estructura del dataset, tratamiento de valores nulos y duplicados, análisis descriptivo y transformación de la columna de fecha para extraer información temporal.
     * **Análisis de patrones de consumo:** estudio del comportamiento energético por día de la semana y por mes, evaluación del impacto del tamaño del hogar, temperatura y uso en horas punta.
     * **Procesamiento y transformación de variables:** creación de consumo per cápita, codificación de variables categóricas, definición de umbrales mediante percentiles y generación del perfil energético como variable objetivo.
     * **Entrenamiento del modelo supervisado:** división del dataset en entrenamiento y prueba, normalización de variables y entrenamiento de un modelo Random Forest para clasificar hogares en tres niveles de eficiencia.
-    * **Evaluación del modelo:** análisis de métricas de desempeño (precision, recall, f1-score) y matriz de confusión para validar la capacidad del modelo de generalizar correctamente.
+    * **Evaluación del modelo:** análisis de métricas de desempeño (precision, recall, f1-score, matriz de confusión) para validar la capacidad del modelo de generalizar correctamente.
     * **Generación de recomendaciones:** implementación de reglas basadas en el perfil energético y en condiciones específicas como temperatura y uso de aire acondicionado, además de recomendaciones derivadas de las predicciones del modelo.
     * **Serialización del modelo:** guardado del modelo entrenado y del scaler para permitir su reutilización sin necesidad de reentrenamiento.
+
+## 📊 REPORTE DE AVANCES 20-07-2026
+
+### 1. Resumen de Cambios Realizados
+* **Definición de dataset:** Luego de analizar el proyecto, se consultaron distintos repositorios de datasets. Se seleccionó el dataset `household_energy_consumption`, que presenta el consumo energético de varios hogares durante un mes y contempla variables como consumo total de energía, número de integrantes del hogar y consumo en horas punta, entre otras.
+
+## 📊 REPORTE DE AVANCES 27-07-2026
+
+### 1. Resumen de Cambios Realizados
+* **Limpieza de datos y exploración inicial:** se creó un notebook y, luego de la importación de librerías y la carga del dataset, se procedió con la limpieza de los datos para detectar valores faltantes, duplicados y errores y estandarizar formatos como fechas y unidades de medida. A continuación, se realizó la exploración inicial, para identificar tendencias generales, como patrones de consumo por día de la semana y uso en horas punta, y se generaron visualizaciones preliminares.
+* **Procesamiento y transformación de variables:** se crearon nuevas variables, como indicadores de eficiencia, consumo per cápita y variaciones diarias, y se seleccionaron variables relevantes para el modelo supervisado.
+* **Entrenamiento del modelo supervisado:** se dividió el dataset en un grupo de prueba y otro de entrenamiento mediante train-test split y se entrenó el modelo Random Forest para clasificar hogares en tres niveles de eficiencia.
+* **Evaluación del modelo:** se analizaron métricas de desempeño (precision, recall, f1-score,matriz de confusión) para validar el modelo y se creó un sistema de recomendaciones automatizadas basadas en reglas y predicciones del modelo.
+* **Serialización del modelo:** se generan los archivos `modelo_eficiencia.pkl` y `scaler_eficiencia.pkl` para reutilizar el modelo sin necesidad de reentrenarlo, facilitando así su integración en aplicaciones.
+
+
 
 ---
 
