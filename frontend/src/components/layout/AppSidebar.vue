@@ -10,7 +10,6 @@ const emit = defineEmits(["update:tab"])
 <template>
   <aside class="w-full md:w-64 bg-[#090d16] border-r border-white/5 flex flex-col justify-between p-5 shrink-0 shadow-2xl h-screen sticky top-0 z-30 select-none">
     <div>
-      <!-- Brand Header -->
       <div class="flex items-center space-x-3 mb-8 px-2 py-1">
         <div class="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center font-black text-slate-950 shadow-md shadow-emerald-500/30 text-sm">
           E
@@ -21,7 +20,6 @@ const emit = defineEmits(["update:tab"])
         </div>
       </div>
 
-      <!-- Navigation -->
       <nav class="space-y-1.5">
         <button
           @click="emit('update:tab', 'dashboard')"
@@ -80,7 +78,6 @@ const emit = defineEmits(["update:tab"])
       </nav>
     </div>
 
-    <!-- User Profile Card -->
     <div class="pt-4 border-t border-white/5">
       <div class="flex items-center space-x-3 px-3 py-2 rounded-xl bg-white/[0.02] border border-white/5">
         <div class="w-8 h-8 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-extrabold text-xs shrink-0 shadow-inner">

@@ -23,7 +23,6 @@ const totalEstancias = computed(() => {
 
 <template>
   <div class="space-y-6">
-    <!-- Top KPI Metric Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div class="bg-[#121824]/90 border border-white/5 p-4 sm:p-5 rounded-2xl flex items-center justify-between shadow-xl backdrop-blur-xl">
         <div>
@@ -66,7 +65,6 @@ const totalEstancias = computed(() => {
       </div>
     </div>
 
-    <!-- Main Table Card Container -->
     <div class="bg-[#121824]/90 border border-white/5 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-xl flex flex-col justify-between overflow-hidden">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-5 gap-3 shrink-0 border-b border-white/5">
         <div>
@@ -85,7 +83,6 @@ const totalEstancias = computed(() => {
         </button>
       </div>
 
-      <!-- Table Container with Internal Scroll and Sticky Header -->
       <div class="overflow-x-auto overflow-y-auto max-h-[480px] custom-scrollbar mt-3">
         <table class="w-full text-left border-collapse">
           <thead>
@@ -144,7 +141,6 @@ const totalEstancias = computed(() => {
               </td>
             </tr>
 
-            <!-- Empty State -->
             <tr v-if="dispositivosRegistrados.length === 0 && !cargandoDispositivos">
               <td colspan="6" class="text-center py-16 text-slate-500">
                 <div class="flex flex-col items-center justify-center">
@@ -169,7 +165,6 @@ const totalEstancias = computed(() => {
               </td>
             </tr>
 
-            <!-- Loading State -->
             <tr v-if="cargandoDispositivos">
               <td colspan="6" class="text-center py-16 text-slate-400">
                 <div class="flex items-center justify-center space-x-2">

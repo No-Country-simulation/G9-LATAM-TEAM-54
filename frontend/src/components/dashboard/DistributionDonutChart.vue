@@ -59,7 +59,6 @@ const pct = (kwh) =>
 
 <template>
   <div class="h-[390px] bg-[#121824]/90 border border-white/5 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-xl flex flex-col justify-between overflow-hidden">
-    <!-- Header -->
     <div class="flex items-center justify-between pb-2 shrink-0">
       <div>
         <h2 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Distribución</h2>
@@ -70,9 +69,7 @@ const pct = (kwh) =>
       </span>
     </div>
 
-    <!-- Body content with fixed height and internal scroll -->
     <div v-if="estanciasDesglose.length > 0" class="flex-1 min-h-0 flex flex-col justify-between pt-1">
-      <!-- Donut Chart Canvas -->
       <div class="relative mx-auto shrink-0 my-1" style="width: 140px; height: 140px;">
         <Doughnut :data="doughnutChartData" :options="doughnutChartOptions" />
         <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
@@ -82,7 +79,6 @@ const pct = (kwh) =>
         </div>
       </div>
 
-      <!-- Scrollable Room Breakdown List -->
       <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-1.5 pr-1 mt-2">
         <div
           v-for="(estancia, i) in estanciasDesglose"
@@ -114,9 +110,14 @@ const pct = (kwh) =>
       </div>
     </div>
 
-    <!-- Empty State -->
     <div v-else class="flex-1 flex flex-col items-center justify-center text-center p-4">
-      <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-xl mb-2">📊</div>
+      <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-emerald-400 mb-2">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+      </div>
       <p class="text-slate-400 text-xs font-bold">Sin datos de estancias</p>
       <p class="text-slate-500 text-[11px] mt-0.5">Registra dispositivos para ver la distribución</p>
     </div>

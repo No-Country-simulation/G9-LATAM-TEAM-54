@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ==========================================================================
-   EnergiAI Custom Animations & Keyframes
-   ========================================================================== */
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -67,10 +63,6 @@
   animation-delay: 500ms;
 }
 
-/* ==========================================================================
-   Enterprise Custom Scrollbar
-   ========================================================================== */
-
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
@@ -95,7 +87,6 @@
   background-color: rgba(16, 185, 129, 0.45);
 }
 
-/* Base styling */
 body {
   background-color: #090d16;
   color: #f8fafc;

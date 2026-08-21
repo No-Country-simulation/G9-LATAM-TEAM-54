@@ -9,7 +9,6 @@ defineProps({
 
 <template>
   <div class="h-[400px] bg-[#121824]/90 border border-white/5 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-xl flex flex-col justify-between overflow-hidden">
-    <!-- Header -->
     <div class="flex items-center justify-between pb-3 shrink-0">
       <div>
         <h2 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Recomendaciones IA</h2>
@@ -21,7 +20,6 @@ defineProps({
       </span>
     </div>
 
-    <!-- Scrollable Recommendations Body -->
     <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-2.5 pr-1.5 mt-2">
       <div
         v-for="(rec, index) in recomendaciones"
@@ -43,7 +41,6 @@ defineProps({
       </div>
     </div>
 
-    <!-- Status Footer -->
     <div class="pt-3 mt-2 border-t border-white/5 shrink-0 flex items-center justify-between text-[11px] text-slate-500 font-medium">
       <span>Inferencias basadas en ONNX</span>
       <span class="text-emerald-400 font-mono font-semibold">100% Precisión</span>

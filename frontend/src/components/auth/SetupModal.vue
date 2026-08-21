@@ -32,7 +32,9 @@ const handleSubmit = () => {
     <div class="w-full max-w-lg bg-[#121824] border border-emerald-500/40 shadow-2xl p-8 rounded-2xl space-y-6">
       <div class="text-center">
         <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 mb-3 shadow-inner">
-          ⚡
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
         </div>
         <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-widest">
           Configuración Requerida

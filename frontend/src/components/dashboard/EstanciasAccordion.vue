@@ -12,7 +12,6 @@ const emit = defineEmits(["toggle-estancia", "abrir-modal-dispositivo"])
 
 <template>
   <div class="h-[400px] bg-[#121824]/90 border border-white/5 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-xl flex flex-col justify-between overflow-hidden">
-    <!-- Header -->
     <div class="flex justify-between items-center pb-3 shrink-0">
       <div>
         <h2 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Estancias</h2>
@@ -33,7 +32,6 @@ const emit = defineEmits(["toggle-estancia", "abrir-modal-dispositivo"])
       </div>
     </div>
 
-    <!-- Scrollable Accordion Body -->
     <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-2.5 pr-1.5 mt-2">
       <div v-for="estancia in estanciasDesglose" :key="estancia.id" class="group">
         <div
@@ -64,7 +62,6 @@ const emit = defineEmits(["toggle-estancia", "abrir-modal-dispositivo"])
           </div>
         </div>
 
-        <!-- Expanded Devices inside the room -->
         <div
           v-if="selectedEstanciaId === estancia.id"
           class="mt-1.5 pl-2 space-y-1.5"

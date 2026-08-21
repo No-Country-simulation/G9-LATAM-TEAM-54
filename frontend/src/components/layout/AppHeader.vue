@@ -26,10 +26,8 @@ const tabMeta = computed(() => {
 
 <template>
   <header class="h-16 shrink-0 border-b border-white/5 px-6 md:px-8 flex justify-between items-center bg-[#090d16]/90 backdrop-blur-xl z-20 sticky top-0 select-none">
-    <!-- Breadcrumb / View info -->
     <div class="flex items-center space-x-3">
       <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 shadow-inner">
-        <!-- Tab SVGs -->
         <svg v-if="currentTab === 'dashboard'" class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="7" height="9" rx="1"/>
           <rect x="14" y="3" width="7" height="5" rx="1"/>
@@ -72,9 +70,7 @@ const tabMeta = computed(() => {
       </div>
     </div>
 
-    <!-- Actions Control Group -->
     <div class="flex items-center space-x-3">
-      <!-- Primary Action: Generar Reporte -->
       <button
         v-if="currentTab === 'dashboard'"
         @click="emit('generar-reporte')"
@@ -91,10 +87,8 @@ const tabMeta = computed(() => {
         <span>{{ generandoReporte ? "Generando..." : "Generar Reporte" }}</span>
       </button>
 
-      <!-- Divider -->
       <div class="h-6 w-[1px] bg-white/10 hidden sm:block"></div>
 
-      <!-- Logout Action -->
       <button
         @click="emit('logout')"
         class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/20 text-slate-400 hover:text-rose-400 text-xs font-semibold transition-all duration-200 inline-flex items-center justify-center gap-1.5 cursor-pointer leading-none"
