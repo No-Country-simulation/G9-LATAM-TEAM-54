@@ -1,3 +1,9 @@
+# Variables de Entorno
+.env
+.env.local
+.env.*.local
+
+# HELP y Maven
 HELP.md
 backend/target/
 .mvn/wrapper/maven-wrapper.jar
