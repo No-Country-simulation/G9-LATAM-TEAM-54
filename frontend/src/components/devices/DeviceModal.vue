@@ -82,20 +82,28 @@ const handleSubmit = () => {
         >
           <div class="flex justify-between items-center pb-3 border-b border-white/5">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg">
-                ⚡
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-inner">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22v-5"/>
+                  <path d="M9 8V2"/>
+                  <path d="M15 8V2"/>
+                  <path d="M18 8v5a6 6 0 0 1-12 0V8z"/>
+                </svg>
               </div>
               <div>
                 <h3 class="text-base font-extrabold text-white tracking-tight">Registrar Nuevo Dispositivo</h3>
-                <p class="text-[11px] text-slate-400">Añade un equipo para calcular tu consumo energetico</p>
+                <p class="text-[11px] text-slate-400">Añade un equipo para calcular tu consumo energético</p>
               </div>
             </div>
             <button
               type="button"
               @click="emit('close')"
-              class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-xs transition font-bold"
+              class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white inline-flex items-center justify-center transition cursor-pointer"
             >
-              X
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
             </button>
           </div>
 
@@ -126,7 +134,9 @@ const handleSubmit = () => {
                       class="flex items-center justify-between px-3 py-2 rounded-lg text-xs transition cursor-pointer"
                     >
                       <span class="truncate">{{ est.nombre || est.nombreEstancia }}</span>
-                      <span v-if="form.estanciaId === (est.id || est.estanciaId)" class="text-emerald-400 text-xs shrink-0 ml-2">✓</span>
+                      <svg v-if="form.estanciaId === (est.id || est.estanciaId)" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
                     </div>
                     <div v-if="estanciasDisponibles.length === 0" class="px-3 py-2 text-xs text-slate-500 italic text-center">Sin estancias</div>
                   </div>
@@ -158,7 +168,9 @@ const handleSubmit = () => {
                       class="flex items-center justify-between px-3 py-2 rounded-lg text-xs transition cursor-pointer"
                     >
                       <span class="truncate">{{ tipo.nombre || tipo.descripcion || tipo.nombreEquipo }}</span>
-                      <span v-if="form.equipoId === (tipo.id || tipo.equipoId)" class="text-emerald-400 text-xs shrink-0 ml-2">✓</span>
+                      <svg v-if="form.equipoId === (tipo.id || tipo.equipoId)" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
                     </div>
                     <div v-if="tiposDispositivosDisponibles.length === 0" class="px-3 py-2 text-xs text-slate-500 italic text-center">Cargando...</div>
                   </div>
@@ -191,7 +203,9 @@ const handleSubmit = () => {
                     class="flex items-center justify-between px-3 py-2 rounded-lg text-xs transition cursor-pointer"
                   >
                     <span class="truncate">{{ v.etiqueta }} <span class="text-emerald-400/80 font-mono">({{ v.potenciaWatts || v.potencia_watts }}W)</span></span>
-                    <span v-if="form.varianteId === (v.id || v.varianteId)" class="text-emerald-400 text-xs shrink-0 ml-2">✓</span>
+                    <svg v-if="form.varianteId === (v.id || v.varianteId)" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
                   </div>
                   <div v-if="variantesDisponibles.length === 0" class="px-3 py-2 text-xs text-slate-500 italic text-center">Sin variantes</div>
                 </div>
@@ -204,7 +218,7 @@ const handleSubmit = () => {
                 type="text"
                 v-model="form.alias"
                 required
-                placeholder="Ej. Aire Principal Habitacion"
+                placeholder="Ej. Aire Principal Habitación"
                 class="w-full px-4 py-2.5 bg-[#090d16] border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500 text-sm transition shadow-inner placeholder:text-slate-600"
               />
             </div>
@@ -213,7 +227,7 @@ const handleSubmit = () => {
               <div class="flex justify-between items-center">
                 <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Uso Diario Estimado</label>
                 <span class="px-2.5 py-0.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono font-bold text-xs">
-                  {{ form.horasUsoDiarias }} hrs / dia
+                  {{ form.horasUsoDiarias }} hrs / día
                 </span>
               </div>
               <input
@@ -226,7 +240,7 @@ const handleSubmit = () => {
                   v-for="h in [2, 4, 8, 12, 24]" :key="h" type="button"
                   @click="form.horasUsoDiarias = h"
                   :class="form.horasUsoDiarias === h ? 'bg-emerald-500 text-slate-950 font-bold border-emerald-500 shadow' : 'bg-white/5 text-slate-400 hover:text-white border-white/5'"
-                  class="px-2.5 py-1 rounded-lg border transition text-[11px] font-mono"
+                  class="px-2.5 py-1 rounded-lg border transition text-[11px] font-mono cursor-pointer"
                 >
                   {{ h }}h
                 </button>
@@ -236,10 +250,13 @@ const handleSubmit = () => {
             <p v-if="error" class="text-rose-400 text-xs text-center font-medium">{{ error }}</p>
 
             <div class="flex items-center justify-end space-x-3 pt-2 border-t border-white/5">
-              <button type="button" @click="emit('close')" class="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 font-bold rounded-xl text-xs transition">
+              <button type="button" @click="emit('close')" class="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 font-bold rounded-xl text-xs transition inline-flex items-center justify-center cursor-pointer leading-none">
                 Cancelar
               </button>
-              <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-lg shadow-emerald-500/20 flex items-center space-x-1.5">
+              <button type="submit" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-xs transition-all duration-200 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 active:scale-[0.98] inline-flex items-center justify-center gap-1.5 cursor-pointer leading-none">
+                <svg class="w-3.5 h-3.5 text-slate-950 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
                 <span>Guardar Dispositivo</span>
               </button>
             </div>

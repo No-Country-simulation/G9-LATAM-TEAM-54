@@ -347,15 +347,15 @@ onMounted(() => {
     <ToastNotification :show="showToast" :message="toastMessage" />
 
     <div v-if="!isAuthenticated" class="flex-1 flex flex-col justify-between bg-[#090d16] w-full">
-      <header class="h-20 px-8 md:px-16 flex justify-between items-center border-b border-white/5">
-        <div class="flex items-center space-x-3">
+      <header class="h-20 px-6 md:px-12 flex justify-between items-center border-b border-white/5 bg-[#090d16]/80 backdrop-blur-md sticky top-0 z-30">
+        <div class="flex items-center space-x-3 cursor-pointer" @click="authView = 'landing'">
           <div class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center font-black text-slate-950 shadow-lg shadow-emerald-500/30">E</div>
-          <span class="text-lg font-extrabold text-white tracking-tight">EnergiAI</span>
+          <span class="text-lg font-extrabold text-white tracking-tight">Energi<span class="text-emerald-400">AI</span></span>
         </div>
-        <div class="flex items-center space-x-4">
-          <button @click="authView = 'landing'" class="text-xs text-slate-300 hover:text-white transition font-semibold">Inicio</button>
-          <button @click="authView = 'login'" class="px-4 py-2 text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl hover:bg-emerald-500/20 transition">Iniciar Sesion</button>
-          <button @click="authView = 'register'" class="px-4 py-2 text-xs font-bold text-slate-950 bg-emerald-500 rounded-xl hover:bg-emerald-400 transition shadow-lg shadow-emerald-500/20">Registrarse</button>
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <button @click="authView = 'landing'" :class="authView === 'landing' ? 'text-white' : 'text-slate-400 hover:text-white'" class="text-xs transition font-semibold px-3 py-2 rounded-lg hover:bg-white/5 cursor-pointer leading-none inline-flex items-center justify-center">Inicio</button>
+          <button @click="authView = 'login'" class="px-4 py-2 text-xs font-bold text-slate-200 hover:text-white bg-[#121824] hover:bg-white/5 border border-white/10 hover:border-emerald-500/30 rounded-xl transition shadow-sm active:scale-[0.98] inline-flex items-center justify-center cursor-pointer leading-none">Iniciar Sesión</button>
+          <button @click="authView = 'register'" class="px-4 py-2 text-xs font-extrabold text-slate-950 bg-emerald-500 hover:bg-emerald-400 rounded-xl transition shadow-lg shadow-emerald-500/20 active:scale-[0.98] inline-flex items-center justify-center cursor-pointer leading-none">Registrarse</button>
         </div>
       </header>
 
@@ -386,14 +386,14 @@ onMounted(() => {
                 :costo-estimado="globalData.costoEstimado"
                 :categoria="globalData.categoria"
               />
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                <div class="lg:col-span-2">
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                <div class="lg:col-span-2 flex flex-col">
                   <EnergyLineChart />
                 </div>
                 <DistributionDonutChart :estancias-desglose="estanciasDesglose" />
               </div>
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                <div class="lg:col-span-2">
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                <div class="lg:col-span-2 flex flex-col">
                   <EstanciasAccordion
                     :estancias-desglose="estanciasDesglose"
                     :selected-estancia-id="selectedEstanciaId"
