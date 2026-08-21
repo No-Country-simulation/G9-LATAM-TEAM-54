@@ -25,23 +25,50 @@ public class PredictionService {
     private OrtEnvironment env;
     private OrtSession session;
 
+    private final OciObjectStorageService ociObjectStorageService;
+
+    public PredictionService(OciObjectStorageService ociObjectStorageService) {
+        this.ociObjectStorageService = ociObjectStorageService;
+    }
+
     public record PrediccionResultado(CategoriaEnergetica categoria, double probabilidad) {}
 
     @PostConstruct
     public void init() {
         try {
             env = OrtEnvironment.getEnvironment();
-            try (InputStream modelStream = getClass().getClassLoader().getResourceAsStream("EnergiAI_model.onnx")) {
-                if (modelStream == null) {
-                    logger.warn("No se encontró EnergiAI_model.onnx en el classpath. Usando modo simulación.");
-                    return;
-                }
-                byte[] modelBytes = modelStream.readAllBytes();
-                session = env.createSession(modelBytes);
-                logger.info("¡Modelo ONNX cargado exitosamente en el contenedor!");
+            byte[] modelBytes = loadModelBytes();
+            if (modelBytes == null) {
+                logger.warn("No se pudo obtener el modelo ONNX (ni desde OCI ni desde el classpath). Usando modo simulación.");
+                return;
             }
+            session = env.createSession(modelBytes);
+            logger.info("¡Modelo ONNX cargado exitosamente en el contenedor!");
         } catch (Exception e) {
             logger.error("No se pudo inicializar el modelo ONNX: {}", e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Intenta obtener el modelo primero desde el bucket de OCI Object Storage.
+     * Si OCI no está habilitado/disponible, cae de vuelta al archivo empaquetado en el classpath.
+     */
+    private byte[] loadModelBytes() throws Exception {
+        if (ociObjectStorageService.isAvailable()) {
+            try {
+                logger.info("Descargando modelo ONNX desde OCI Object Storage...");
+                return ociObjectStorageService.downloadModel();
+            } catch (Exception e) {
+                logger.error("Falló la descarga del modelo desde OCI Object Storage, se usará el respaldo local: {}",
+                        e.getMessage(), e);
+            }
+        }
+
+        try (InputStream modelStream = getClass().getClassLoader().getResourceAsStream("EnergiAI_model.onnx")) {
+            if (modelStream == null) {
+                return null;
+            }
+            return modelStream.readAllBytes();
         }
     }
 

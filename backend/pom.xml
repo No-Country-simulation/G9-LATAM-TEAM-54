@@ -85,6 +85,25 @@
 			<version>1.28.0</version>
 		</dependency>
 
+		<!-- Oracle Cloud Infrastructure - Object Storage -->
+		<dependency>
+			<groupId>com.oracle.oci.sdk</groupId>
+			<artifactId>oci-java-sdk-objectstorage</artifactId>
+			<version>3.57.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.oci.sdk</groupId>
+			<artifactId>oci-java-sdk-common</artifactId>
+			<version>3.57.1</version>
+		</dependency>
+
+		<!--Proveedor HTTP requerido en runtime por el SDK de OCI -->
+<dependency>
+    <groupId>com.oracle.oci.sdk</groupId>
+    <artifactId>oci-java-sdk-common-httpclient-jersey3</artifactId>
+    <version>3.57.1</version>
+</dependency>
+
 		<!-- Pruebas -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

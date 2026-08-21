@@ -20,5 +20,17 @@ jwt:
   secret: ${JWT_SECRET}
   expiration-ms: 86400000
 
+oci:
+  enabled: ${OCI_ENABLED:false}
+  tenancy-id: ${OCI_TENANCY_OCID:}
+  user-id: ${OCI_USER_OCID:}
+  fingerprint: ${OCI_FINGERPRINT:}
+  region: ${OCI_REGION:sa-saopaulo-1}
+  private-key-path: ${OCI_PRIVATE_KEY_PATH:/app/secrets/oci_api_key.pem}
+  passphrase: ${OCI_PASSPHRASE:}
+  namespace: ${OCI_NAMESPACE:}
+  bucket-name: ${OCI_BUCKET_NAME:}
+  model-object-name: ${OCI_MODEL_OBJECT_NAME:EnergiAI_model.onnx}
+
 server:
   port: 8082

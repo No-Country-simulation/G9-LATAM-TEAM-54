@@ -32,6 +32,20 @@ services:
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - OCI_ENABLED=${OCI_ENABLED:-false}
+      - OCI_TENANCY_OCID=${OCI_TENANCY_OCID}
+      - OCI_USER_OCID=${OCI_USER_OCID}
+      - OCI_FINGERPRINT=${OCI_FINGERPRINT}
+      - OCI_REGION=${OCI_REGION:-sa-saopaulo-1}
+      - OCI_PRIVATE_KEY_PATH=/app/secrets/oci_api_key.pem
+      - OCI_PASSPHRASE=${OCI_PASSPHRASE:-}
+      - OCI_NAMESPACE=${OCI_NAMESPACE}
+      - OCI_BUCKET_NAME=${OCI_BUCKET_NAME}
+      - OCI_MODEL_OBJECT_NAME=${OCI_MODEL_OBJECT_NAME:-EnergiAI_model.onnx}
+    volumes:
+      # La clave privada NUNCA se copia dentro de la imagen (Dockerfile);
+      # se monta en runtime como solo-lectura desde ./secrets (carpeta ignorada por git).
+      - ./secrets/oci_api_key.pem:/app/secrets/oci_api_key.pem:ro
     depends_on:
       postgres:
         condition: service_healthy

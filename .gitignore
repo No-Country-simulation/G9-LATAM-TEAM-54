@@ -3,6 +3,11 @@
 .env.local
 .env.*.local
 
+# OCI - claves privadas y secretos (NUNCA subir a git)
+secrets/
+*.pem
+oci_api_key*
+
 # HELP y Maven
 HELP.md
 backend/target/
