@@ -1,4 +1,3 @@
-# Etapa única: Servir los archivos pre-compilados con Nginx
 FROM nginx:alpine
 
 COPY dist /usr/share/nginx/html
