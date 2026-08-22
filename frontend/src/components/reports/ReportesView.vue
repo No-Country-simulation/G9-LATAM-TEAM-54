@@ -119,16 +119,16 @@ const ultimoDiagnostico = computed(() => {
         </button>
       </div>
 
-      <div class="overflow-x-auto overflow-y-auto max-h-[480px] custom-scrollbar mt-3">
-        <table class="w-full text-left border-collapse">
+      <div class="overflow-x-auto max-h-[480px] custom-scrollbar mt-3 -mx-2 sm:mx-0 px-2 sm:px-0">
+        <table class="w-full min-w-[700px] text-left border-collapse">
           <thead>
             <tr class="sticky top-0 bg-[#0d1320] border-b border-white/10 text-[10px] text-slate-400 uppercase tracking-widest z-10">
-              <th class="py-3 px-4 font-extrabold">ID / Fecha</th>
-              <th class="py-3 px-4 font-extrabold">Consumo Total</th>
-              <th class="py-3 px-4 font-extrabold">Costo Estimado</th>
-              <th class="py-3 px-4 font-extrabold">Categoría IA</th>
-              <th class="py-3 px-4 font-extrabold">Confianza / Prob.</th>
-              <th class="py-3 px-4 font-extrabold text-right">Acciones</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">ID / Fecha</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">Consumo Total</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">Costo Estimado</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">Categoría IA</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">Confianza / Prob.</th>
+              <th class="py-3 px-4 font-extrabold text-right whitespace-nowrap">Acciones</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-white/5 text-xs">
@@ -137,19 +137,19 @@ const ultimoDiagnostico = computed(() => {
               :key="rep.id"
               class="hover:bg-white/[0.02] transition-colors group"
             >
-              <td class="py-3.5 px-4 font-mono text-white">
+              <td class="py-3.5 px-4 font-mono text-white whitespace-nowrap">
                 <div class="font-black text-xs text-white group-hover:text-emerald-400 transition-colors">#{{ rep.id }}</div>
                 <div class="text-[10px] text-slate-400 mt-0.5">{{ formatFecha(rep.fechaCreacion || rep.fecha_creacion) }}</div>
               </td>
-              <td class="py-3.5 px-4 text-slate-100 font-mono font-bold">{{ rep.consumoActual ?? rep.consumo_actual ?? 0 }} kWh</td>
-              <td class="py-3.5 px-4 text-emerald-400 font-mono font-black">$ {{ Number(rep.costoEstimado ?? rep.costo_estimado ?? 0).toFixed(2) }}</td>
-              <td class="py-3.5 px-4">
+              <td class="py-3.5 px-4 text-slate-100 font-mono font-bold whitespace-nowrap">{{ rep.consumoActual ?? rep.consumo_actual ?? 0 }} kWh</td>
+              <td class="py-3.5 px-4 text-emerald-400 font-mono font-black whitespace-nowrap">$ {{ Number(rep.costoEstimado ?? rep.costo_estimado ?? 0).toFixed(2) }}</td>
+              <td class="py-3.5 px-4 whitespace-nowrap">
                 <span :class="getBadgeClass(rep.categoria)" class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full border font-black text-[10px] uppercase tracking-wider shadow-sm">
                   <span :class="getDotClass(rep.categoria)" class="w-1.5 h-1.5 rounded-full"></span>
                   <span>{{ rep.categoria || 'OPTIMIZADO' }}</span>
                 </span>
               </td>
-              <td class="py-3.5 px-4 text-slate-300 font-mono font-medium">
+              <td class="py-3.5 px-4 text-slate-300 font-mono font-medium whitespace-nowrap">
                 <div class="flex items-center space-x-2">
                   <span>{{ rep.probabilidad != null ? (Number(rep.probabilidad) * 100).toFixed(0) + '%' : '100%' }}</span>
                   <div class="w-16 bg-white/10 rounded-full h-1.5 overflow-hidden hidden sm:block">
@@ -160,7 +160,7 @@ const ultimoDiagnostico = computed(() => {
                   </div>
                 </div>
               </td>
-              <td class="py-3.5 px-4 text-right">
+              <td class="py-3.5 px-4 text-right whitespace-nowrap">
                 <button
                   @click="emit('eliminar', rep)"
                   class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 rounded-xl transition-all duration-200 font-bold text-[11px] hover:border-rose-500/40 inline-flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.98] leading-none"

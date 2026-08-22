@@ -83,16 +83,16 @@ const totalEstancias = computed(() => {
         </button>
       </div>
 
-      <div class="overflow-x-auto overflow-y-auto max-h-[480px] custom-scrollbar mt-3">
-        <table class="w-full text-left border-collapse">
+      <div class="overflow-x-auto max-h-[480px] custom-scrollbar mt-3 -mx-2 sm:mx-0 px-2 sm:px-0">
+        <table class="w-full min-w-[680px] text-left border-collapse">
           <thead>
             <tr class="sticky top-0 bg-[#0d1320] border-b border-white/10 text-[10px] text-slate-400 uppercase tracking-widest z-10">
-              <th class="py-3 px-4 font-extrabold">Alias / Dispositivo</th>
-              <th class="py-3 px-4 font-extrabold">Estancia</th>
-              <th class="py-3 px-4 font-extrabold">Variante / Capacidad</th>
-              <th class="py-3 px-4 font-extrabold">Uso Diario</th>
-              <th class="py-3 px-4 font-extrabold">Consumo Est.</th>
-              <th class="py-3 px-4 font-extrabold text-right">Acciones</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">Alias / Dispositivo</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">Estancia</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">Variante / Capacidad</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">Uso Diario</th>
+              <th class="py-3 px-4 font-extrabold whitespace-nowrap">Consumo Est.</th>
+              <th class="py-3 px-4 font-extrabold text-right whitespace-nowrap">Acciones</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-white/5 text-xs">
@@ -101,7 +101,7 @@ const totalEstancias = computed(() => {
               :key="disp.id || disp.dispositivoId"
               class="hover:bg-white/[0.02] transition-colors group"
             >
-              <td class="py-3.5 px-4 font-bold text-white">
+              <td class="py-3.5 px-4 font-bold text-white whitespace-nowrap">
                 <div class="flex items-center space-x-2.5">
                   <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -114,18 +114,18 @@ const totalEstancias = computed(() => {
                   <span class="text-slate-100 group-hover:text-emerald-400 transition-colors">{{ disp.alias }}</span>
                 </div>
               </td>
-              <td class="py-3.5 px-4 text-slate-300">
-                <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] font-medium text-slate-300">
+              <td class="py-3.5 px-4 text-slate-300 whitespace-nowrap">
+                <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] font-medium text-slate-300 inline-block whitespace-nowrap">
                   {{ disp.nombreEstancia || disp.estanciaNombre || 'Estancia' }}
                 </span>
               </td>
-              <td class="py-3.5 px-4 text-slate-300 font-mono text-[11px]">
+              <td class="py-3.5 px-4 text-slate-300 font-mono text-[11px] whitespace-nowrap">
                 {{ disp.nombreVariante || disp.varianteEtiqueta || 'Estándar' }}
                 <span v-if="disp.potenciaWatts" class="text-emerald-400 text-[10px] font-bold ml-1">({{ disp.potenciaWatts }}W)</span>
               </td>
-              <td class="py-3.5 px-4 text-slate-300 font-mono font-medium">{{ disp.horasUsoDiarias }} hrs / día</td>
-              <td class="py-3.5 px-4 text-emerald-400 font-mono font-extrabold">{{ disp.consumoMensualKwh ?? disp.consumoKwh ?? 0 }} kWh</td>
-              <td class="py-3.5 px-4 text-right">
+              <td class="py-3.5 px-4 text-slate-300 font-mono font-medium whitespace-nowrap">{{ disp.horasUsoDiarias }} hrs / día</td>
+              <td class="py-3.5 px-4 text-emerald-400 font-mono font-extrabold whitespace-nowrap">{{ disp.consumoMensualKwh ?? disp.consumoKwh ?? 0 }} kWh</td>
+              <td class="py-3.5 px-4 text-right whitespace-nowrap">
                 <button
                   @click="emit('eliminar', disp)"
                   class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25 rounded-xl transition-all duration-200 font-bold text-[11px] hover:border-rose-500/40 inline-flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.98] leading-none"

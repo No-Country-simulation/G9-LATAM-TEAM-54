@@ -30,6 +30,7 @@ import DeviceModal from "./components/devices/DeviceModal.vue"
 
 import ReportesView from "./components/reports/ReportesView.vue"
 import TendenciasView from "./components/trends/TendenciasView.vue"
+import DocumentacionView from "./components/docs/DocumentacionView.vue"
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend, Title, Filler)
 
@@ -38,6 +39,8 @@ const userName = ref("")
 const currentTab = ref("dashboard")
 const authView = ref("landing")
 const needsSetup = ref(false)
+const isMobileMenuOpen = ref(false)
+const authMobileMenuOpen = ref(false)
 
 const selectedEstanciaId = ref(null)
 
@@ -76,7 +79,12 @@ const triggerToast = (msg) => {
   toastTimeout = setTimeout(() => { showToast.value = false }, 3500)
 }
 
+watch(authView, () => {
+  authMobileMenuOpen.value = false
+})
+
 watch(currentTab, (newTab) => {
+  isMobileMenuOpen.value = false
   if (newTab === "dispositivos") fetchMisDispositivos()
   else if (newTab === "reportes") fetchHistorialReportes()
 })
@@ -346,117 +354,226 @@ onMounted(() => {
 
     <ToastNotification :show="showToast" :message="toastMessage" />
 
-    <div v-if="!isAuthenticated" class="flex-1 flex flex-col justify-between bg-[#090d16] w-full">
-      <header class="h-20 px-6 md:px-12 flex justify-between items-center border-b border-white/5 bg-[#090d16]/80 backdrop-blur-md sticky top-0 z-30">
-        <div class="flex items-center space-x-3 cursor-pointer" @click="authView = 'landing'">
-          <div class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center font-black text-slate-950 shadow-lg shadow-emerald-500/30">E</div>
-          <span class="text-lg font-extrabold text-white tracking-tight">Energi<span class="text-emerald-400">AI</span></span>
-        </div>
-        <div class="flex items-center space-x-2 sm:space-x-3">
-          <button @click="authView = 'landing'" :class="authView === 'landing' ? 'text-white' : 'text-slate-400 hover:text-white'" class="text-xs transition font-semibold px-3 py-2 rounded-lg hover:bg-white/5 cursor-pointer leading-none inline-flex items-center justify-center">Inicio</button>
-          <button @click="authView = 'login'" class="px-4 py-2 text-xs font-bold text-slate-200 hover:text-white bg-[#121824] hover:bg-white/5 border border-white/10 hover:border-emerald-500/30 rounded-xl transition shadow-sm active:scale-[0.98] inline-flex items-center justify-center cursor-pointer leading-none">Iniciar Sesión</button>
-          <button @click="authView = 'register'" class="px-4 py-2 text-xs font-extrabold text-slate-950 bg-emerald-500 hover:bg-emerald-400 rounded-xl transition shadow-lg shadow-emerald-500/20 active:scale-[0.98] inline-flex items-center justify-center cursor-pointer leading-none">Registrarse</button>
-        </div>
-      </header>
+    <transition name="page-fade" mode="out-in">
+      <!-- Public / Unauthenticated Area -->
+      <div v-if="!isAuthenticated" key="public-auth-view" class="flex-1 flex flex-col justify-between bg-[#090d16] w-full min-h-screen">
+        <header class="h-16 sm:h-20 px-4 sm:px-6 md:px-12 flex justify-between items-center border-b border-white/5 bg-[#090d16]/90 backdrop-blur-md sticky top-0 z-30 select-none">
+          <div class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer" @click="authView = 'landing'; authMobileMenuOpen = false">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-500 flex items-center justify-center font-black text-slate-950 shadow-lg shadow-emerald-500/30 text-sm sm:text-base">E</div>
+            <span class="text-base sm:text-lg font-extrabold text-white tracking-tight">Energi<span class="text-emerald-400">AI</span></span>
+          </div>
 
-      <LandingView v-if="authView === 'landing'" @go-login="authView = 'login'" @go-register="authView = 'register'" />
-      <LoginForm v-else-if="authView === 'login'" :error="loginError" @submit="handleLogin" @go-register="authView = 'register'" />
-      <RegisterForm v-else-if="authView === 'register'" :error="registerError" :success="registerSuccess" @submit="handleRegister" @go-login="authView = 'login'" />
-    </div>
+          <!-- Desktop Navigation Buttons -->
+          <div class="hidden sm:flex items-center space-x-2 sm:space-x-3">
+            <button @click="authView = 'landing'" :class="authView === 'landing' ? 'text-white' : 'text-slate-400 hover:text-white'" class="text-xs transition font-semibold px-3 py-2 rounded-lg hover:bg-white/5 cursor-pointer leading-none inline-flex items-center justify-center">Inicio</button>
+            
+            <button
+              @click="authView = 'docs'"
+              :class="authView === 'docs' ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold' : 'text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border-white/10'"
+              class="px-3 py-2 text-xs font-semibold rounded-xl border transition shadow-sm inline-flex items-center gap-1.5 cursor-pointer leading-none active:scale-[0.98]"
+            >
+              <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                <line x1="8" y1="6" x2="16" y2="6"/>
+                <line x1="8" y1="10" x2="16" y2="10"/>
+                <line x1="8" y1="14" x2="13" y2="14"/>
+              </svg>
+              <span>Documentación</span>
+            </button>
 
-    <template v-else>
-      <SetupModal v-if="needsSetup" :opciones-temperatura="opcionesTemperatura" :error="setupError" @submit="handleSetupSubmit" />
+            <button @click="authView = 'login'" class="px-4 py-2 text-xs font-bold text-slate-200 hover:text-white bg-[#121824] hover:bg-white/5 border border-white/10 hover:border-emerald-500/30 rounded-xl transition shadow-sm active:scale-[0.98] inline-flex items-center justify-center cursor-pointer leading-none">Iniciar Sesión</button>
+            <button @click="authView = 'register'" class="px-4 py-2 text-xs font-extrabold text-slate-950 bg-emerald-500 hover:bg-emerald-400 rounded-xl transition shadow-lg shadow-emerald-500/20 active:scale-[0.98] inline-flex items-center justify-center cursor-pointer leading-none">Registrarse</button>
+          </div>
 
-      <template v-if="!needsSetup">
-        <AppSidebar :current-tab="currentTab" :user-name="userName" @update:tab="currentTab = $event" />
+          <!-- Mobile Hamburger Button -->
+          <button
+            @click="authMobileMenuOpen = !authMobileMenuOpen"
+            class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 sm:hidden transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500/30 shrink-0"
+            aria-label="Menú principal"
+          >
+            <svg v-if="!authMobileMenuOpen" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <svg v-else class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
 
-        <div class="flex-1 flex flex-col min-h-screen overflow-hidden">
-          <AppHeader
+        <!-- Mobile Dropdown Menu -->
+        <transition
+          enter-active-class="transition duration-200 ease-out"
+          enter-from-class="opacity-0 -translate-y-2"
+          enter-to-class="opacity-100 translate-y-0"
+          leave-active-class="transition duration-150 ease-in"
+          leave-from-class="opacity-100 translate-y-0"
+          leave-to-class="opacity-0 -translate-y-2"
+        >
+          <div v-if="authMobileMenuOpen" class="sm:hidden fixed inset-x-0 top-16 z-30 bg-[#090d16]/95 border-b border-white/10 backdrop-blur-xl p-4 shadow-2xl space-y-2.5">
+            <button
+              @click="authView = 'landing'; authMobileMenuOpen = false"
+              :class="authView === 'landing' ? 'bg-white/10 text-white font-bold' : 'text-slate-300 hover:bg-white/5'"
+              class="w-full text-left px-4 py-3 rounded-xl text-sm transition font-medium flex items-center justify-between cursor-pointer"
+            >
+              <span>Inicio</span>
+              <span v-if="authView === 'landing'" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            </button>
+            
+            <button
+              @click="authView = 'docs'; authMobileMenuOpen = false"
+              :class="authView === 'docs' ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold' : 'text-slate-300 hover:bg-white/5 border-white/5'"
+              class="w-full text-left px-4 py-3 rounded-xl text-sm transition font-medium flex items-center justify-between border cursor-pointer"
+            >
+              <div class="flex items-center space-x-2.5">
+                <div class="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                  </svg>
+                </div>
+                <span>Documentación</span>
+              </div>
+              <span v-if="authView === 'docs'" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            </button>
+
+            <button
+              @click="authView = 'login'; authMobileMenuOpen = false"
+              class="w-full text-center px-4 py-3 text-sm font-bold text-slate-200 bg-[#121824] border border-white/10 hover:border-emerald-500/30 rounded-xl transition shadow-sm active:scale-[0.98] cursor-pointer"
+            >
+              Iniciar Sesión
+            </button>
+            <button
+              @click="authView = 'register'; authMobileMenuOpen = false"
+              class="w-full text-center px-4 py-3 text-sm font-extrabold text-slate-950 bg-emerald-500 hover:bg-emerald-400 rounded-xl transition shadow-lg shadow-emerald-500/20 active:scale-[0.98] cursor-pointer"
+            >
+              Registrarse
+            </button>
+          </div>
+        </transition>
+
+        <!-- Auth Views Transition -->
+        <transition name="view-slide" mode="out-in">
+          <LandingView v-if="authView === 'landing'" key="landing" @go-login="authView = 'login'" @go-register="authView = 'register'" />
+          <LoginForm v-else-if="authView === 'login'" key="login" :error="loginError" @submit="handleLogin" @go-register="authView = 'register'" />
+          <RegisterForm v-else-if="authView === 'register'" key="register" :error="registerError" :success="registerSuccess" @submit="handleRegister" @go-login="authView = 'login'" />
+          <div v-else-if="authView === 'docs'" key="docs" class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full flex-1 flex flex-col">
+            <DocumentacionView />
+          </div>
+        </transition>
+      </div>
+
+      <!-- Authenticated Dashboard Area -->
+      <div v-else key="authenticated-app-view" class="flex-1 flex min-h-screen bg-[#0d111a] w-full relative">
+        <SetupModal v-if="needsSetup" :opciones-temperatura="opcionesTemperatura" :error="setupError" @submit="handleSetupSubmit" />
+
+        <template v-if="!needsSetup">
+          <AppSidebar
             :current-tab="currentTab"
-            :generando-reporte="generandoReporte"
-            @generar-reporte="generarNuevoReporte"
-            @logout="logout"
+            :user-name="userName"
+            :is-open="isMobileMenuOpen"
+            @update:tab="currentTab = $event"
+            @close="isMobileMenuOpen = false"
           />
 
-          <main class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
-
-            <template v-if="currentTab === 'dashboard'">
-              <StatCards
-                :consumo-actual="globalData.consumoActual"
-                :costo-estimado="globalData.costoEstimado"
-                :categoria="globalData.categoria"
-              />
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-                <div class="lg:col-span-2 flex flex-col">
-                  <EnergyLineChart />
-                </div>
-                <DistributionDonutChart :estancias-desglose="estanciasDesglose" />
-              </div>
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-                <div class="lg:col-span-2 flex flex-col">
-                  <EstanciasAccordion
-                    :estancias-desglose="estanciasDesglose"
-                    :selected-estancia-id="selectedEstanciaId"
-                    @toggle-estancia="toggleEstancia"
-                    @abrir-modal-dispositivo="abrirModalCrearDispositivo"
-                  />
-                </div>
-                <RecommendationsCard :recomendaciones="globalData.recomendaciones" />
-              </div>
-            </template>
-
-            <DispositivosView
-              v-else-if="currentTab === 'dispositivos'"
-              :dispositivos-registrados="dispositivosRegistrados"
-              :cargando-dispositivos="cargandoDispositivos"
-              @abrir-modal="abrirModalCrearDispositivo"
-              @eliminar="confirmarEliminarDispositivo"
-            />
-
-            <ReportesView
-              v-else-if="currentTab === 'reportes'"
-              :historial-reportes="historialReportes"
-              :cargando-reportes="cargandoReportes"
+          <!-- Main Content Area with desktop left padding for fixed sidebar -->
+          <div class="flex-1 flex flex-col min-h-screen overflow-hidden md:pl-64 w-full">
+            <AppHeader
+              :current-tab="currentTab"
               :generando-reporte="generandoReporte"
-              @generar="generarNuevoReporte"
-              @eliminar="confirmarEliminarReporte"
+              :is-mobile-menu-open="isMobileMenuOpen"
+              @toggle-mobile-menu="isMobileMenuOpen = !isMobileMenuOpen"
+              @generar-reporte="generarNuevoReporte"
+              @logout="logout"
             />
 
-            <TendenciasView v-else-if="currentTab === 'graficos'" />
-          </main>
-        </div>
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
+              <transition name="view-slide" mode="out-in">
+                <div v-if="currentTab === 'dashboard'" key="dashboard" class="space-y-6">
+                  <StatCards
+                    :consumo-actual="globalData.consumoActual"
+                    :costo-estimado="globalData.costoEstimado"
+                    :categoria="globalData.categoria"
+                  />
+                  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                    <div class="lg:col-span-2 flex flex-col">
+                      <EnergyLineChart />
+                    </div>
+                    <DistributionDonutChart :estancias-desglose="estanciasDesglose" />
+                  </div>
+                  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                    <div class="lg:col-span-2 flex flex-col">
+                      <EstanciasAccordion
+                        :estancias-desglose="estanciasDesglose"
+                        :selected-estancia-id="selectedEstanciaId"
+                        @toggle-estancia="toggleEstancia"
+                        @abrir-modal-dispositivo="abrirModalCrearDispositivo"
+                      />
+                    </div>
+                    <RecommendationsCard :recomendaciones="globalData.recomendaciones" />
+                  </div>
+                </div>
 
-        <DeviceModal
-          :visible="modalDispositivoVisible"
-          :estancias-disponibles="estanciasDisponibles"
-          :tipos-dispositivos-disponibles="tiposDispositivosDisponibles"
-          :variantes-disponibles="variantesDisponibles"
-          :error="dispositivoError"
-          @close="modalDispositivoVisible = false"
-          @submit="handleCrearDispositivo"
-          @equipo-change="handleEquipoChange"
-        />
+                <DispositivosView
+                  v-else-if="currentTab === 'dispositivos'"
+                  key="dispositivos"
+                  :dispositivos-registrados="dispositivosRegistrados"
+                  :cargando-dispositivos="cargandoDispositivos"
+                  @abrir-modal="abrirModalCrearDispositivo"
+                  @eliminar="confirmarEliminarDispositivo"
+                />
 
-        <ConfirmModal
-          :visible="modalConfirmDispositivo.visible"
-          title="Eliminar Dispositivo"
-          message="Esta accion eliminara permanentemente el dispositivo"
-          :item-name="modalConfirmDispositivo.alias"
-          :loading="modalConfirmDispositivo.cargando"
-          @confirm="ejecutarEliminarDispositivo"
-          @cancel="modalConfirmDispositivo.visible = false"
-        />
+                <ReportesView
+                  v-else-if="currentTab === 'reportes'"
+                  key="reportes"
+                  :historial-reportes="historialReportes"
+                  :cargando-reportes="cargandoReportes"
+                  :generando-reporte="generandoReporte"
+                  @generar="generarNuevoReporte"
+                  @eliminar="confirmarEliminarReporte"
+                />
 
-        <ConfirmModal
-          :visible="modalConfirmReporte.visible"
-          title="Eliminar Reporte"
-          message="Esta accion eliminara permanentemente el reporte energetico #"
-          :item-name="String(modalConfirmReporte.id)"
-          :loading="modalConfirmReporte.cargando"
-          @confirm="ejecutarEliminarReporte"
-          @cancel="modalConfirmReporte.visible = false"
-        />
-      </template>
-    </template>
+                <TendenciasView v-else-if="currentTab === 'graficos'" key="graficos" />
+                <DocumentacionView v-else-if="currentTab === 'documentacion'" key="documentacion" />
+              </transition>
+            </main>
+          </div>
+
+          <DeviceModal
+            :visible="modalDispositivoVisible"
+            :estancias-disponibles="estanciasDisponibles"
+            :tipos-dispositivos-disponibles="tiposDispositivosDisponibles"
+            :variantes-disponibles="variantesDisponibles"
+            :error="dispositivoError"
+            @close="modalDispositivoVisible = false"
+            @submit="handleCrearDispositivo"
+            @equipo-change="handleEquipoChange"
+          />
+
+          <ConfirmModal
+            :visible="modalConfirmDispositivo.visible"
+            title="Eliminar Dispositivo"
+            message="Esta accion eliminara permanentemente el dispositivo"
+            :item-name="modalConfirmDispositivo.alias"
+            :loading="modalConfirmDispositivo.cargando"
+            @confirm="ejecutarEliminarDispositivo"
+            @cancel="modalConfirmDispositivo.visible = false"
+          />
+
+          <ConfirmModal
+            :visible="modalConfirmReporte.visible"
+            title="Eliminar Reporte"
+            message="Esta accion eliminara permanentemente el reporte energetico #"
+            :item-name="String(modalConfirmReporte.id)"
+            :loading="modalConfirmReporte.cargando"
+            @confirm="ejecutarEliminarReporte"
+            @cancel="modalConfirmReporte.visible = false"
+          />
+        </template>
+      </div>
+    </transition>
   </div>
 </template>

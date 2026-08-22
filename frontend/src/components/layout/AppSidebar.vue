@@ -1,28 +1,71 @@
 <script setup>
 defineProps({
   currentTab: String,
-  userName: String
+  userName: String,
+  isOpen: {
+    type: Boolean,
+    default: false
+  }
 })
 
-const emit = defineEmits(["update:tab"])
+const emit = defineEmits(["update:tab", "close"])
+
+const handleTabSelect = (tab) => {
+  emit("update:tab", tab)
+  emit("close")
+}
 </script>
 
 <template>
-  <aside class="w-full md:w-64 bg-[#090d16] border-r border-white/5 flex flex-col justify-between p-5 shrink-0 shadow-2xl h-screen sticky top-0 z-30 select-none">
+  <!-- Overlay Backdrop for Mobile -->
+  <transition
+    enter-active-class="transition-opacity duration-300 ease-out"
+    enter-from-class="opacity-0"
+    enter-to-class="opacity-100"
+    leave-active-class="transition-opacity duration-200 ease-in"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
+  >
+    <div
+      v-if="isOpen"
+      @click="emit('close')"
+      class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 md:hidden"
+    ></div>
+  </transition>
+
+  <!-- Sidebar Drawer (Fixed on desktop & drawer on mobile) -->
+  <aside
+    class="fixed top-0 left-0 h-screen z-50 md:z-30 w-64 bg-[#090d16] border-r border-white/5 flex flex-col justify-between p-5 shrink-0 shadow-2xl transition-transform duration-300 ease-in-out select-none"
+    :class="isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
+  >
     <div>
-      <div class="flex items-center space-x-3 mb-8 px-2 py-1">
-        <div class="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center font-black text-slate-950 shadow-md shadow-emerald-500/30 text-sm">
-          E
+      <div class="flex items-center justify-between mb-8 px-2 py-1">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center font-black text-slate-950 shadow-md shadow-emerald-500/30 text-sm">
+            E
+          </div>
+          <div>
+            <h2 class="font-extrabold text-white tracking-wider text-xs uppercase">Energi<span class="text-emerald-400">AI</span> Panel</h2>
+            <span class="text-[9px] text-slate-400 font-bold tracking-widest uppercase">Eco Dashboard v2.0</span>
+          </div>
         </div>
-        <div>
-          <h2 class="font-extrabold text-white tracking-wider text-xs uppercase">Energi<span class="text-emerald-400">AI</span> Panel</h2>
-          <span class="text-[9px] text-slate-400 font-bold tracking-widest uppercase">Eco Dashboard v2.0</span>
-        </div>
+
+        <!-- Close Button (Mobile Only) -->
+        <button
+          @click="emit('close')"
+          class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 md:hidden transition cursor-pointer"
+          aria-label="Cerrar menú"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       <nav class="space-y-1.5">
         <button
-          @click="emit('update:tab', 'dashboard')"
+          @click="handleTabSelect('dashboard')"
           :class="currentTab === 'dashboard' ? 'bg-emerald-500 text-slate-950 font-black shadow-lg shadow-emerald-500/25' : 'text-slate-400 hover:bg-white/5 hover:text-white font-semibold'"
           class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs transition-all duration-200 text-left tracking-wider cursor-pointer group select-none"
         >
@@ -36,7 +79,7 @@ const emit = defineEmits(["update:tab"])
         </button>
 
         <button
-          @click="emit('update:tab', 'dispositivos')"
+          @click="handleTabSelect('dispositivos')"
           :class="currentTab === 'dispositivos' ? 'bg-emerald-500 text-slate-950 font-black shadow-lg shadow-emerald-500/25' : 'text-slate-400 hover:bg-white/5 hover:text-white font-semibold'"
           class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs transition-all duration-200 text-left tracking-wider cursor-pointer group select-none"
         >
@@ -50,7 +93,7 @@ const emit = defineEmits(["update:tab"])
         </button>
 
         <button
-          @click="emit('update:tab', 'reportes')"
+          @click="handleTabSelect('reportes')"
           :class="currentTab === 'reportes' ? 'bg-emerald-500 text-slate-950 font-black shadow-lg shadow-emerald-500/25' : 'text-slate-400 hover:bg-white/5 hover:text-white font-semibold'"
           class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs transition-all duration-200 text-left tracking-wider cursor-pointer group select-none"
         >
@@ -65,7 +108,7 @@ const emit = defineEmits(["update:tab"])
         </button>
 
         <button
-          @click="emit('update:tab', 'graficos')"
+          @click="handleTabSelect('graficos')"
           :class="currentTab === 'graficos' ? 'bg-emerald-500 text-slate-950 font-black shadow-lg shadow-emerald-500/25' : 'text-slate-400 hover:bg-white/5 hover:text-white font-semibold'"
           class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs transition-all duration-200 text-left tracking-wider cursor-pointer group select-none"
         >
@@ -74,6 +117,21 @@ const emit = defineEmits(["update:tab"])
             <polyline points="17 6 23 6 23 12"/>
           </svg>
           <span class="uppercase">Tendencias</span>
+        </button>
+
+        <button
+          @click="handleTabSelect('documentacion')"
+          :class="currentTab === 'documentacion' ? 'bg-emerald-500 text-slate-950 font-black shadow-lg shadow-emerald-500/25' : 'text-slate-400 hover:bg-white/5 hover:text-white font-semibold'"
+          class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs transition-all duration-200 text-left tracking-wider cursor-pointer group select-none"
+        >
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            <line x1="8" y1="6" x2="16" y2="6"/>
+            <line x1="8" y1="10" x2="16" y2="10"/>
+            <line x1="8" y1="14" x2="13" y2="14"/>
+          </svg>
+          <span class="uppercase">Documentación</span>
         </button>
       </nav>
     </div>

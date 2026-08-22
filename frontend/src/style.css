@@ -66,6 +66,7 @@
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -87,8 +88,57 @@
   background-color: rgba(16, 185, 129, 0.45);
 }
 
+/* Page fade transition (login/logout/register auth state changes) */
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.page-fade-enter-from,
+.page-fade-leave-to {
+  opacity: 0;
+}
+
+/* Smooth view transition */
+.view-slide-enter-active,
+.view-slide-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.view-slide-enter-from {
+  opacity: 0;
+  transform: translateY(10px) scale(0.99);
+}
+
+.view-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.99);
+}
+
+/* Accordion / dropdown transitions */
+.accordion-enter-active,
+.accordion-leave-active {
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.accordion-enter-from,
+.accordion-leave-to {
+  opacity: 0;
+  max-height: 0;
+  transform: translateY(-4px);
+}
+
+.accordion-enter-to,
+.accordion-leave-from {
+  opacity: 1;
+  max-height: 500px;
+  transform: translateY(0);
+}
+
 body {
   background-color: #090d16;
   color: #f8fafc;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
