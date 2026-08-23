@@ -21,27 +21,154 @@
 ## ⚙️ 2. Backend & Arquitectura (Spring Boot)
 
 ### Card #05: IMPLEMENTACIÓN DE DTOs (Completada) ✅
-* **Objetivo:** Crear las clases que representan las solicitudes y respuestas de la API, asegurando la integridad desde la entrada.
-* **Avances técnicos:**
-    * Creación de `AnalisisRequest` incorporando las validaciones de Jakarta (`@NotNull`, `@Min`, `@NotBlank`) para los campos clave.
-    * Definición de `AnalisisResponse` estructurando los campos de salida (categoría, probabilidad, recomendaciones y costo estimado mensual).
-    * Implementación de `ErrorResponse` para estandarizar el manejo de errores.
+
+* **Objetivo:** Crear las clases que representan las solicitudes y respuestas de la API, asegurando la integridad y el tipado desde la entrada hasta la salida.
+
+* **Avances técnicos — Request DTOs:**
+
+| Clase | Campo | Tipo | Validación |
+| :--- | :--- | :--- | :--- |
+| `AnalisisRequest` | `consumo_kwh` | `Double` | `@NotNull`, `@Min(0)` |
+| `AnalisisRequest` | `householdSize` | `Integer` | `@NotNull`, `@Min(1)` |
+| `AnalisisRequest` | `avgTemperatureC` | `Double` | `@NotNull` |
+| `AnalisisRequest` | `hasAc` | `Boolean` | `@NotNull` |
+| `AnalisisRequest` | `peakHoursUsageKwh` | `Double` | `@NotNull`, `@Min(0)` |
+| `AnalisisRequest` | `cantidadEquipos` | `Integer` | `@NotNull`, `@Min(0)` |
+
+* **Avances técnicos — Response DTOs:**
+
+| Clase | Campos principales | Descripción |
+| :--- | :--- | :--- |
+| `AnalisisResponse` | `id`, `consumoActual`, `costoEstimado`, `categoria`, `probabilidad`, `recomendaciones`, `fechaCreacion` | Respuesta base del análisis energético |
+| `FinalAnalisisResponse` | Todos los de `AnalisisResponse` + `desgloseEstancias`, `householdSize`, `cantidadEquipos` | Respuesta completa con desglose por estancia |
+| `DashboardResponse` | `consumoTotal`, `costoTotal`, `categoria`, `desgloseEstancias`, `recomendaciones` | Resumen del dashboard del usuario |
+| `DispositivoResponse` | `id`, `alias`, `nombreEquipo`, `nombreVariante`, `horasUsoDiarias`, `consumoMensualKwh`, `nombreEstancia` | Representación de dispositivo del usuario |
+| `EstadisticasResponse` | `totalAnalisis`, `consumoPromedioKwh`, `costoPromedioMensual`, `consumoTotalKwh`, `costoTotalMensual` | Métricas agregadas del historial |
+| `ErrorResponse` | `timestamp`, `status`, `error`, `message`, `path` | Estructura estándar de errores de la API |
+
+* **Enum de Categorías:**
+    * Se definió `CategoriaEnergetica` como `enum` con tres valores: `EFICIENTE`, `MODERADO`, `INEFICIENTE`. La entidad lo persiste en base de datos como `String` mediante `@Enumerated(EnumType.STRING)`.
+
+---
 
 ### Card #06: LÓGICA DE NEGOCIO Y SERVICIOS (Completada) ✅
+
 * **Objetivo:** Estructurar la arquitectura de servicios desacoplados para mantener el código limpio y mantenible.
-* **Avances técnicos:**
-    * Configuración de `PredictionService` para la ejecución del modelo ONNX de forma nativa en Spring Boot (`@PostConstruct` / `@PreDestroy`).
-    * Desarrollo de `CostService` para el cálculo financiero.
-    * Creación del motor de reglas en `RecommendationsService`.
-    * Integración de la orquestación central en `AnalisisService`.
 
-### Card #07: CONTROLADOR REST (ENDPOINTS) (En curso) ⏳
-* **Objetivo:** Exponer los endpoints oficiales del sistema manteniendo un controlador delgado (*thin controller*).
-* **Avances técnicos:**
+* **`PredictionService` — Motor de Inferencia ONNX:**
+    * Carga el modelo `EnergiAI_model.onnx` desde el classpath al iniciar la aplicación mediante `@PostConstruct`.
+    * Inicializa `OrtEnvironment` y `OrtSession` de ONNX Runtime para la inferencia nativa en la JVM, sin microservicio Python externo.
+    * Extrae el resultado del modelo mediante los outputs `output_label` (categoría) y `output_probability` (confianza).
+    * Implementa **modo simulación**: si el modelo no está disponible en el classpath, aplica umbrales de consumo (`< 10 kWh` → EFICIENTE, `> 18 kWh` → INEFICIENTE) como fallback.
+    * Detecta anomalías: consumo negativo fuerza la categoría `EFICIENTE` con probabilidad `1.0`.
+    * Libera los recursos de ONNX correctamente en `@PreDestroy`.
+    * Expone el resultado mediante el record interno `PrediccionResultado(CategoriaEnergetica, double)`.
 
-### Card #08: MANEJO GLOBAL DE ERRORES (Por iniciar) 🔴
-* **Objetivo:** Centralizar la captura de excepciones para garantizar respuestas JSON limpias y con los códigos HTTP correctos.
-* **Avances técnicos:**
+* **`CostService` — Motor Financiero:**
+    * Calcula el costo mensual estimado aplicando una tarifa fija de **$ 0,75 por kWh**.
+    * Fórmula: `costoEstimado = consumoKwh × 0.75`
+
+* **`RecommendationsService` — Motor de Reglas:**
+    * Genera recomendaciones dinámicas evaluando la `CategoriaEnergetica` resultante de la predicción.
+    * Incluye una alerta adicional si el consumo diario equivalente supera los **18 kWh**.
+
+    | Categoría | Recomendación generada |
+    | :--- | :--- |
+    | `INEFICIENTE` | Apagar equipos pesados en horas pico |
+    | `MODERADO` | Consumo equilibrado, mantener hábitos |
+    | `EFICIENTE` | Consumo dentro del rango óptimo |
+
+* **`AnalisisService` — Orquestador Principal:**
+    * Centraliza el flujo completo: recupera los dispositivos del usuario desde la BD, agrega el consumo, invoca a `PredictionService`, luego a `CostService` y `RecommendationsService`.
+    * Persiste el resultado en `AnalisisEntity` con referencia al usuario autenticado (`@ManyToOne` → `User`).
+    * Expone métodos adicionales: `obtenerHistorialPorEmail`, `obtenerEstadisticasPorEmail` (promedios y totales) y `eliminarAnalisis`.
+
+---
+
+### Card #07: CONTROLADOR REST (ENDPOINTS) (Completada) ✅
+
+* **Objetivo:** Exponer los endpoints oficiales del sistema manteniendo un controlador delgado (*thin controller*), delegando toda la lógica a la capa de servicios.
+
+* **`AnalisisController` — Endpoints implementados:**
+
+| Método | Endpoint | Auth | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/analisis-energetico` | 🔒 JWT | Ejecuta el análisis completo del usuario autenticado y persiste el resultado |
+| `POST` | `/api/analisis/calcular-dispositivo` | 🔒 JWT | Calcula el consumo mensual estimado de un dispositivo específico |
+| `GET` | `/api/analisis/{id}` | 🔒 JWT | Consulta un análisis por ID (solo si pertenece al usuario autenticado) |
+| `GET` | `/api/historial` | 🔒 JWT | Retorna el historial completo de análisis del usuario autenticado |
+| `GET` | `/api/estadisticas` | 🔒 JWT | Retorna las métricas agregadas del usuario (promedio, total kWh, costo) |
+| `DELETE` | `/api/analisis/{id}` | 🔒 JWT | Elimina un análisis del historial |
+
+* **Detalles de implementación:**
+    * El controlador utiliza `Principal` de Spring Security para obtener el email del usuario autenticado en cada petición, sin exponer el ID de usuario en la URL.
+    * La consulta `GET /api/analisis/{id}` retorna `403 FORBIDDEN` si el análisis no pertenece al usuario que realiza la petición.
+    * Decorado con `@RestController` y `@RequestMapping("/api")` para el prefijo global de la API.
+
+=== "POST /api/analisis-energetico"
+
+    ```json
+    // Respuesta 200 OK
+    {
+      "id": 1,
+      "categoria": "MODERADO",
+      "probabilidad": 0.82,
+      "consumoActual": 250.5,
+      "costoEstimado": 187.875,
+      "recomendaciones": ["El consumo se encuentra en un rango moderado y equilibrado."],
+      "desgloseEstancias": [...],
+      "householdSize": 3,
+      "cantidadEquipos": 5
+    }
+    ```
+
+=== "GET /api/estadisticas"
+
+    ```json
+    // Respuesta 200 OK
+    {
+      "totalAnalisis": 4,
+      "consumoPromedioKwh": 230.75,
+      "costoPromedioMensual": 173.06,
+      "consumoTotalKwh": 923.0,
+      "costoTotalMensual": 692.25
+    }
+    ```
+
+---
+
+### Card #08: MANEJO GLOBAL DE ERRORES (Completada) ✅
+
+* **Objetivo:** Centralizar la captura de excepciones con `@RestControllerAdvice` para garantizar respuestas JSON estandarizadas y códigos HTTP correctos en todos los escenarios de error.
+
+* **`GlobalExceptionHandler` — Manejadores implementados:**
+
+| Excepción capturada | HTTP Status | Descripción |
+| :--- | :--- | :--- |
+| `MethodArgumentNotValidException` | `400 Bad Request` | Campos del request que no pasan las validaciones de Jakarta (campo a campo) |
+| `ModelInferenceException` | `500 Internal Server Error` | Fallo en la carga o ejecución del modelo ONNX |
+| `Exception` (genérico) | `500 Internal Server Error` | Cualquier error no controlado del sistema |
+
+* **Excepción personalizada `ModelInferenceException`:**
+    * Extiende `RuntimeException`, lanzada desde `PredictionService` ante fallos críticos de ONNX Runtime.
+    * Capturada específicamente por `GlobalExceptionHandler` para retornar un mensaje descriptivo del error de inferencia.
+
+* **Estructura estándar de respuesta de error:**
+
+```json
+{
+  "timestamp": "2026-08-23T17:00:00",
+  "status": 400,
+  "error": "Datos de entrada inválidos",
+  "detalles": {
+    "consumo_kwh": "El consumo en kWh es obligatorio",
+    "householdSize": "El tamaño del hogar debe ser al menos 1"
+  }
+}
+```
+
+!!! note "Validaciones de campo"
+    Los errores `400` incluyen el mapa `detalles` con cada campo inválido y su mensaje de validación, permitiendo al frontend identificar exactamente qué campos corregir.
 
 ---
 
