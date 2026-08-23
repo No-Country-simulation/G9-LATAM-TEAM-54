@@ -9,6 +9,7 @@ backend/target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+energia-deploy.tar.gz
 
 ### STS ###
 .apt_generated
