@@ -34,6 +34,10 @@ public class DispositivoUsuario {
     @JoinColumn(name = "estancia_id")
     private Estancia estancia;
 
+    /** Soft-delete flag: false = eliminado lógicamente, historial histórico se preserva */
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean activo = true;
+
     // Constructores
     public DispositivoUsuario() {}
 
@@ -61,4 +65,7 @@ public class DispositivoUsuario {
 
     public Estancia getEstancia() { return estancia; }
     public void setEstancia(Estancia estancia) { this.estancia = estancia; }
+
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 }

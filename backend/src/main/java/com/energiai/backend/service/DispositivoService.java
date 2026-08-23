@@ -91,7 +91,9 @@ public class DispositivoService {
         return repository.findById(id)
                 .filter(d -> d.getUser().getId().equals(usuario.getId()))
                 .map(d -> {
-                    repository.delete(d);
+                    // Borrado lógico: preserva el historial de análisis anteriores
+                    d.setActivo(false);
+                    repository.save(d);
                     return true;
                 })
                 .orElse(false);

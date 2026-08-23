@@ -11,6 +11,7 @@ const badgeClass = computed(() => {
   const cat = props.categoria?.toUpperCase() || ""
   if (cat.includes("MODERADO")) return "bg-amber-500/10 border-amber-500/25 text-amber-400"
   if (cat.includes("INEFICIENTE") || cat.includes("ELEVADO") || cat.includes("ALTO")) return "bg-rose-500/10 border-rose-500/25 text-rose-400"
+  if (cat.includes("PENDIENTE") || cat.includes("SIN DATOS")) return "bg-sky-500/10 border-sky-500/25 text-sky-400"
   return "bg-emerald-500/10 border-emerald-500/25 text-emerald-400"
 })
 
@@ -18,6 +19,7 @@ const dotClass = computed(() => {
   const cat = props.categoria?.toUpperCase() || ""
   if (cat.includes("MODERADO")) return "bg-amber-400"
   if (cat.includes("INEFICIENTE") || cat.includes("ELEVADO") || cat.includes("ALTO")) return "bg-rose-400"
+  if (cat.includes("PENDIENTE") || cat.includes("SIN DATOS")) return "bg-sky-400"
   return "bg-emerald-400"
 })
 </script>

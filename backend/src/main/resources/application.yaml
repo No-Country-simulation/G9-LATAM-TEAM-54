@@ -20,5 +20,10 @@ jwt:
   secret: ${JWT_SECRET}
   expiration-ms: 86400000
 
+app:
+  scheduler:
+    reportes:
+      cron: ${SCHEDULER_REPORTES_CRON:0 0 0 1 * *}
+
 server:
   port: 8082

@@ -96,8 +96,28 @@ const emit = defineEmits(["toggle-estancia", "abrir-modal-dispositivo"])
         </div>
       </div>
 
-      <div v-if="estanciasDesglose.length === 0" class="h-full flex flex-col items-center justify-center py-10 text-center">
-        <p class="text-slate-500 text-xs italic">No hay estancias registradas.</p>
+      <!-- Empty state with CTA -->
+      <div v-if="estanciasDesglose.length === 0" class="h-full flex flex-col items-center justify-center text-center py-8 space-y-4">
+        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 shadow-inner">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-slate-200 font-bold text-sm">¡Bienvenido a EnergiAI!</p>
+          <p class="text-slate-500 text-xs mt-1.5 max-w-[220px] leading-relaxed">Aún no tienes dispositivos registrados. Añade tu primer equipo para comenzar a monitorear el consumo por estancia.</p>
+        </div>
+        <button
+          @click="emit('abrir-modal-dispositivo')"
+          class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs transition-all duration-200 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 active:scale-[0.98] inline-flex items-center gap-1.5 cursor-pointer leading-none"
+        >
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span>Añadir Primer Dispositivo</span>
+        </button>
       </div>
     </div>
   </div>

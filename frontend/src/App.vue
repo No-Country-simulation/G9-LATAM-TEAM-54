@@ -3,7 +3,7 @@ import { ref, onMounted, watch } from "vue"
 import {
   Chart as ChartJS,
   CategoryScale, LinearScale, PointElement, LineElement,
-  ArcElement, Tooltip, Legend, Title, Filler
+  BarElement, ArcElement, Tooltip, Legend, Title, Filler
 } from "chart.js"
 
 import apiClient from "./api/client.js"
@@ -32,7 +32,7 @@ import ReportesView from "./components/reports/ReportesView.vue"
 import TendenciasView from "./components/trends/TendenciasView.vue"
 import DocumentacionView from "./components/docs/DocumentacionView.vue"
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend, Title, Filler)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Tooltip, Legend, Title, Filler)
 
 const isAuthenticated = ref(false)
 const userName = ref("")
@@ -87,6 +87,10 @@ watch(currentTab, (newTab) => {
   isMobileMenuOpen.value = false
   if (newTab === "dispositivos") fetchMisDispositivos()
   else if (newTab === "reportes") fetchHistorialReportes()
+  else if (newTab === "graficos") {
+    fetchMisDispositivos()
+    fetchHistorialReportes()
+  }
 })
 
 const fetchOpcionesTemperatura = async () => {
@@ -142,7 +146,7 @@ const fetchDashboardData = async () => {
       globalData.value.categoria = d.categoria ?? "OPTIMIZADO"
       globalData.value.recomendaciones = d.recomendaciones?.length > 0
         ? d.recomendaciones
-        : ["El consumo se encuentra en un rango moderado y equilibrado."]
+        : (d.consumoTotal > 0 ? ["El consumo se encuentra en un rango moderado y equilibrado."] : [])
       estanciasDesglose.value = (d.desgloseEstancias || []).map(est => ({
         ...est,
         id: est.id || est.estanciaId,
@@ -156,6 +160,10 @@ const fetchDashboardData = async () => {
     console.error(e)
     if (e.response?.status === 403) logout()
   }
+  await Promise.all([
+    fetchHistorialReportes(),
+    fetchMisDispositivos()
+  ])
 }
 
 const fetchUserProfile = async () => {
@@ -500,7 +508,12 @@ onMounted(() => {
                   />
                   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
                     <div class="lg:col-span-2 flex flex-col">
-                      <EnergyLineChart />
+                      <EnergyLineChart
+                        :historial-reportes="historialReportes"
+                        :dispositivos="dispositivosRegistrados"
+                        :estancias-desglose="estanciasDesglose"
+                        @abrir-modal-dispositivo="abrirModalCrearDispositivo"
+                      />
                     </div>
                     <DistributionDonutChart :estancias-desglose="estanciasDesglose" />
                   </div>
@@ -536,7 +549,16 @@ onMounted(() => {
                   @eliminar="confirmarEliminarReporte"
                 />
 
-                <TendenciasView v-else-if="currentTab === 'graficos'" key="graficos" />
+                <TendenciasView
+                  v-else-if="currentTab === 'graficos'"
+                  key="graficos"
+                  :historial-reportes="historialReportes"
+                  :dispositivos="dispositivosRegistrados"
+                  :global-data="globalData"
+                  :user-name="userName"
+                  @abrir-modal-dispositivo="abrirModalCrearDispositivo"
+                  @generar-reporte="generarNuevoReporte"
+                />
                 <DocumentacionView v-else-if="currentTab === 'documentacion'" key="documentacion" />
               </transition>
             </main>

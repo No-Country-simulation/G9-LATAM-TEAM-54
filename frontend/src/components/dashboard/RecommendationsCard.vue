@@ -36,8 +36,19 @@ defineProps({
         <p class="text-slate-300 group-hover:text-slate-100 transition-colors text-[12px] font-medium leading-relaxed">{{ rec }}</p>
       </div>
 
-      <div v-if="recomendaciones.length === 0" class="h-full flex flex-col items-center justify-center py-8 text-center">
-        <p class="text-slate-500 text-xs italic">No hay sugerencias en este momento.</p>
+      <!-- Empty state: no recomendaciones aún -->
+      <div v-if="recomendaciones.length === 0" class="h-full flex flex-col items-center justify-center py-6 text-center space-y-3">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-inner">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18h6"/>
+            <path d="M10 22h4"/>
+            <path d="M12 2a7 7 0 0 0-7 7c0 2.5 1.5 4.5 3.5 5.5.5.5.5 1 .5 1.5h6c0-.5 0-1 .5-1.5 2-1 3.5-3 3.5-5.5a7 7 0 0 0-7-7z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-slate-300 font-bold text-sm">Motor IA en espera</p>
+          <p class="text-slate-500 text-xs mt-1.5 max-w-[200px] leading-relaxed">Registra al menos un dispositivo y genera un reporte para activar las sugerencias de optimización personalizadas.</p>
+        </div>
       </div>
     </div>
 
