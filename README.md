@@ -22,7 +22,7 @@
 
 ---
 
-<a name="descripcion"></a>
+<a id="descripcion"></a>
 ## 📖 Descripción
 
 **EnergiAI** es una solución inteligente desarrollada para el Hackathon de Oracle Cloud Infrastructure. El sistema integra un modelo de Machine Learning (exportado a formato **ONNX** y ejecutado nativamente en la JVM) con una API REST en Spring Boot y una interfaz de usuario en Vue 3.
@@ -36,7 +36,7 @@ Los usuarios pueden registrarse, ingresar sus datos de consumo eléctrico y obte
 
 ---
 
-<a name="objetivos"></a>
+<a id="objetivos"></a>
 ## 🎯 Objetivos
 
 - Analizar patrones de consumo energético mediante Machine Learning.
@@ -48,7 +48,7 @@ Los usuarios pueden registrarse, ingresar sus datos de consumo eléctrico y obte
 
 ---
 
-<a name="tecnologias"></a>
+<a id="tecnologias"></a>
 ## 🛠️ Tecnologías
 
 ### Backend
@@ -96,7 +96,7 @@ Los usuarios pueden registrarse, ingresar sus datos de consumo eléctrico y obte
 
 ---
 
-<a name="arquitectura"></a>
+<a id="arquitectura"></a>
 ## 🏗️ Arquitectura
 
 ```text
