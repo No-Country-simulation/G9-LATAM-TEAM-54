@@ -50,8 +50,8 @@ public class DataInitializer {
             if (equipoCatalogoRepository.count() == 0) {
                 Object[][] equipos = {
                         {1L, "Aire Acondicionado", "Climatización", true, null},
-                        {2L, "Refrigerador / Nevera", "Línea Blanca", false, 150.0},
-                        {3L, "Bombillo LED", "Iluminación", false, 10.0},
+                        {2L, "Refrigerador / Nevera", "Línea Blanca", true, null},
+                        {3L, "Bombillo LED", "Iluminación", true, null},
                         {4L, "Televisor", "Entretenimiento", false, 120.0},
                         {5L, "Lavadora de Ropa", "Línea Blanca", true, null},
                         {6L, "Microondas", "Cocina", false, 1200.0},
@@ -74,18 +74,92 @@ public class DataInitializer {
 
             // 3. Variantes de Equipos
             if (equipoVarianteRepository.count() == 0) {
+
+                // Variantes para Aire Acondicionado
                 EquipoCatalogo aireAcondicionado = equipoCatalogoRepository.findById(1L).orElse(null);
                 if (aireAcondicionado != null) {
-                    Object[][] variantes = {
+                    Object[][] variantesAire = {
                             {1L, "9,000 BTU", 900.0},
                             {2L, "12,000 BTU", 1200.0},
                             {3L, "18,000 BTU", 1800.0},
                             {4L, "24,000 BTU", 2400.0}
                     };
-                    for (Object[] v : variantes) {
+                    for (Object[] v : variantesAire) {
                         EquipoVariante ev = new EquipoVariante();
                         ev.setId((Long) v[0]);
                         ev.setEquipoCatalogo(aireAcondicionado);
+                        ev.setEtiqueta((String) v[1]);
+                        ev.setPotenciaWatts((Double) v[2]);
+                        equipoVarianteRepository.save(ev);
+                    }
+                }
+
+                //Refrigerador
+                EquipoCatalogo nevera = equipoCatalogoRepository.findById(2L).orElse(null);
+                if (nevera != null) {
+                    Object[][] variantesNevera = {
+                            {5L, "Nevera Ejecutiva (Una puerta pequeña)", 150.0},
+                            {6L, "Nevera Estándar (Dos puertas / Dúplex)", 250.0},
+                            {7L, "Nevera Grande / Inverter", 350.0}
+                    };
+                    for (Object[] v : variantesNevera) {
+                        EquipoVariante ev = new EquipoVariante();
+                        ev.setId((Long) v[0]);
+                        ev.setEquipoCatalogo(nevera);
+                        ev.setEtiqueta((String) v[1]);
+                        ev.setPotenciaWatts((Double) v[2]);
+                        equipoVarianteRepository.save(ev);
+                    }
+                }
+
+                //Bombillo LED
+                EquipoCatalogo bombillo = equipoCatalogoRepository.findById(3L).orElse(null);
+                if (bombillo != null) {
+                    Object[][] variantesBombillo = {
+                            {8L, "Bombillo LED 7W - 9W", 9.0},
+                            {9L, "Bombillo LED 12W - 15W", 15.0},
+                            {10L, "Bombillo LED 20W - 30W (Alta potencia)", 25.0}
+                    };
+                    for (Object[] v : variantesBombillo) {
+                        EquipoVariante ev = new EquipoVariante();
+                        ev.setId((Long) v[0]);
+                        ev.setEquipoCatalogo(bombillo);
+                        ev.setEtiqueta((String) v[1]);
+                        ev.setPotenciaWatts((Double) v[2]);
+                        equipoVarianteRepository.save(ev);
+                    }
+                }
+
+                //Lavadora de Ropa
+                EquipoCatalogo lavadora = equipoCatalogoRepository.findById(5L).orElse(null);
+                if (lavadora != null) {
+                    Object[][] variantesLavadora = {
+                            {11L, "Carga Frontal / Compacta (6 kg)", 500.0},
+                            {12L, "Carga Superior Estándar (12 kg)", 800.0},
+                            {13L, "Lavadora / Secadora Grande (15+ kg)", 1500.0}
+                    };
+                    for (Object[] v : variantesLavadora) {
+                        EquipoVariante ev = new EquipoVariante();
+                        ev.setId((Long) v[0]);
+                        ev.setEquipoCatalogo(lavadora);
+                        ev.setEtiqueta((String) v[1]);
+                        ev.setPotenciaWatts((Double) v[2]);
+                        equipoVarianteRepository.save(ev);
+                    }
+                }
+
+                //Ventilador de Techo
+                EquipoCatalogo ventilador = equipoCatalogoRepository.findById(8L).orElse(null);
+                if (ventilador != null) {
+                    Object[][] variantesVentilador = {
+                            {14L, "Ventilador de Piso / Escritorio", 50.0},
+                            {15L, "Ventilador de Pedestal (16 pulgadas)", 75.0},
+                            {16L, "Ventilador de Techo", 100.0}
+                    };
+                    for (Object[] v : variantesVentilador) {
+                        EquipoVariante ev = new EquipoVariante();
+                        ev.setId((Long) v[0]);
+                        ev.setEquipoCatalogo(ventilador);
                         ev.setEtiqueta((String) v[1]);
                         ev.setPotenciaWatts((Double) v[2]);
                         equipoVarianteRepository.save(ev);
