@@ -36,6 +36,7 @@ Los usuarios pueden registrarse, ingresar sus datos de consumo eléctrico y obte
 
 ---
 
+<a name="objetivos"></a>
 ## 🎯 Objetivos
 
 - Analizar patrones de consumo energético mediante Machine Learning.
@@ -47,6 +48,7 @@ Los usuarios pueden registrarse, ingresar sus datos de consumo eléctrico y obte
 
 ---
 
+<a name="tecnologias"></a>
 ## 🛠️ Tecnologías
 
 ### Backend
@@ -94,6 +96,7 @@ Los usuarios pueden registrarse, ingresar sus datos de consumo eléctrico y obte
 
 ---
 
+<a name="arquitectura"></a>
 ## 🏗️ Arquitectura
 
 ```text
@@ -141,6 +144,7 @@ Los usuarios pueden registrarse, ingresar sus datos de consumo eléctrico y obte
 
 ---
 
+<a id="estructura-del-proyecto"></a>
 ## 📁 Estructura del Proyecto
 
 ```text
@@ -192,6 +196,7 @@ G9-LATAM-TEAM-54/
 
 ---
 
+<a id="requisitos-previos"></a>
 ## 📦 Requisitos Previos
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (con WSL 2 en Windows)
@@ -204,6 +209,7 @@ Para desarrollo local adicional:
 
 ---
 
+<a id="ejecucion-con-docker-compose"></a>
 ## 🐳 Ejecución con Docker Compose (Recomendado)
 
 Este es el método principal para correr todos los servicios del sistema.
@@ -240,6 +246,7 @@ docker compose up --build
 
 ---
 
+<a id="ejecucion-en-local-desarrollo"></a>
 ## 💻 Ejecución en Local (Desarrollo)
 
 ### Backend
@@ -263,6 +270,7 @@ npm run dev
 
 ---
 
+<a id="variables-de-entorno"></a>
 ## 🔑 Variables de Entorno
 
 Crea un archivo `.env` en la raíz del proyecto basándote en `.env.example`:
@@ -286,6 +294,7 @@ JWT_SECRET=tu_jwt_secret_aqui_minimo_256_bits
 
 ---
 
+<a id="api-rest"></a>
 ## 🌐 API REST
 
 La API requiere autenticación JWT para la mayoría de los endpoints. Primero debes registrarte o iniciar sesión para obtener un token.
@@ -401,6 +410,7 @@ curl -X GET http://localhost:8082/api/analisis/1 \
 
 ---
 
+<a id="ciencia-de-datos"></a>
 ## 🧪 Ciencia de Datos
 
 El modelo de Machine Learning sigue el siguiente pipeline:
@@ -415,6 +425,7 @@ El notebook completo se encuentra en: [`Notebook_Hackaton_grupo_54.ipynb`](./Not
 
 ---
 
+<a id="equipo"></a>
 ## 👥 Equipo — G9 LATAM Team 54
 
 | Integrante | Rol |
@@ -430,6 +441,7 @@ El notebook completo se encuentra en: [`Notebook_Hackaton_grupo_54.ipynb`](./Not
 
 ---
 
+<a id="licencia"></a>
 ## 📄 Licencia
 
 Proyecto desarrollado con fines académicos para el **Hackathon de Oracle Cloud Infrastructure — G9 LATAM Team 54**.
