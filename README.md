@@ -6,9 +6,9 @@
 
 ## 📋 Tabla de Contenidos
 
-- [Descripción](#descripción)
+- [Descripción](#descripcion)
 - [Objetivos](#objetivos)
-- [Tecnologías](#tecnologías)
+- [Tecnologías](#tecnologias)
 - [Arquitectura](#arquitectura)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Requisitos Previos](#requisitos-previos)
