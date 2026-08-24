@@ -22,6 +22,7 @@
 
 ---
 
+<a name="descripcion"></a>
 ## 📖 Descripción
 
 **EnergiAI** es una solución inteligente desarrollada para el Hackathon de Oracle Cloud Infrastructure. El sistema integra un modelo de Machine Learning (exportado a formato **ONNX** y ejecutado nativamente en la JVM) con una API REST en Spring Boot y una interfaz de usuario en Vue 3.
